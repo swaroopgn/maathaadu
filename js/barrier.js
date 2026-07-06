@@ -6,32 +6,8 @@
 
   const $ = (id) => document.getElementById(id);
 
-  const CATS = {
-    animals: {
-      items: [
-        { id: "naayi",   kn: "ನಾಯಿ",    tr: "naayi",   en: "dog" },
-        { id: "bekku",   kn: "ಬೆಕ್ಕು",   tr: "bekku",   en: "cat" },
-        { id: "aane",    kn: "ಆನೆ",     tr: "aane",    en: "elephant" },
-        { id: "huli",    kn: "ಹುಲಿ",    tr: "huli",    en: "tiger" },
-        { id: "hasu",    kn: "ಹಸು",     tr: "hasu",    en: "cow" },
-        { id: "kudure",  kn: "ಕುದುರೆ",  tr: "kudure",  en: "horse" },
-        { id: "meenu",   kn: "ಮೀನು",    tr: "meenu",   en: "fish" },
-        { id: "hakki",   kn: "ಹಕ್ಕಿ",   tr: "hakki",   en: "bird" },
-      ],
-    },
-    food: {
-      items: [
-        { id: "anna_rice",  kn: "ಅನ್ನ",       tr: "anna",       en: "rice" },
-        { id: "haalu",      kn: "ಹಾಲು",      tr: "haalu",      en: "milk" },
-        { id: "neeru",      kn: "ನೀರು",      tr: "neeru",      en: "water" },
-        { id: "hannu",      kn: "ಹಣ್ಣು",     tr: "hannu",      en: "fruit" },
-        { id: "baalehannu", kn: "ಬಾಳೆಹಣ್ಣು", tr: "baalehannu", en: "banana" },
-        { id: "dose",       kn: "ದೋಸೆ",      tr: "dose",       en: "dosa" },
-        { id: "mosaru",     kn: "ಮೊಸರು",     tr: "mosaru",     en: "curd" },
-        { id: "sihi",       kn: "ಸಿಹಿ",      tr: "sihi",      en: "sweet" },
-      ],
-    },
-  };
+  const CATS = Object.fromEntries(BARRIER_CATS.map((c) => [c.id, c]));
+  const ALL_WORDS = BARRIER_CATS.flatMap((c) => c.items);
 
   const SLIDES = [
     { art: "#scene-1", cap: "This is a game for TWO players. Player 1 gets a secret Kannada word — say it out loud, in Kannada. Don't show the screen!" },
@@ -110,7 +86,7 @@
     else play(src, next);
   }
 
-  const wordSrc = (item, slow) => `audio/${state.cat}/${item.id}${slow ? "_slow" : ""}.mp3`;
+  const wordSrc = (item, slow) => `audio/${item.grp}/${item.id}${slow ? "_slow" : ""}.mp3`;
   const praiseSrc = () => `audio/praise/${PRAISE_IDS[Math.floor(Math.random() * PRAISE_IDS.length)]}.mp3`;
 
   let actx;
@@ -227,6 +203,7 @@
   function startGame(cat) {
     state.mode = "barrier";
     state.cat = cat;
+    state.deck = cat === "mix" ? shuffle(ALL_WORDS).slice(0, 8) : CATS[cat].items;
     state.players = readPlayers();
     state.round = 0;
     state.score = 0;
@@ -238,7 +215,7 @@
   function nextRound() {
     if (state.round >= ROUNDS) return barrierFinal();
 
-    const pool = CATS[state.cat].items.filter((i) => !state.used.includes(i.id));
+    const pool = state.deck.filter((i) => !state.used.includes(i.id));
     state.secret = pool[Math.floor(Math.random() * pool.length)];
     state.used.push(state.secret.id);
 
@@ -274,7 +251,7 @@
   function showGuess() {
     const sp = state.players[state.speaker];
     $("guess-title").textContent = `What did ${sp.name} say? Tap it!`;
-    const others = shuffle(CATS[state.cat].items.filter((i) => i.id !== state.secret.id)).slice(0, GRID - 1);
+    const others = shuffle(state.deck.filter((i) => i.id !== state.secret.id)).slice(0, GRID - 1);
     const opts = shuffle([state.secret, ...others]);
     const grid = $("guess-grid");
     grid.innerHTML = "";
@@ -462,11 +439,26 @@
 
   const ajjiSrc = (a, slow) => `audio/ajji/${a.id}${slow ? "_slow" : ""}.mp3`;
 
-  function openAjji() {
+  const weekPack = () => Math.floor(Date.now() / (7 * 864e5)) % AJJI_PACKS.length;
+
+  function openAjji(packIdx = weekPack()) {
     state.mode = "ajji";
+    state.ajjiPack = packIdx;
+    const pack = AJJI_PACKS[packIdx];
+
+    const packs = $("ajji-packs");
+    packs.innerHTML = "";
+    AJJI_PACKS.forEach((p, i) => {
+      const b = document.createElement("button");
+      b.className = "sketchbtn small" + (i === packIdx ? " primary" : "");
+      b.textContent = p.title;
+      b.addEventListener("click", () => { sndTap(); openAjji(i); });
+      packs.appendChild(b);
+    });
+
     const list = $("ajji-list");
     list.innerHTML = "";
-    AJJI.forEach((a) => {
+    pack.items.forEach((a) => {
       const row = document.createElement("div");
       row.className = "ajji-row framed";
       row.innerHTML = `
@@ -495,8 +487,8 @@
         btn.classList.toggle("ticked");
         sndTap();
         const n = list.querySelectorAll(".a-tick.ticked").length;
-        $("ajji-score").textContent = n ? `${n} of ${AJJI.length} said to ajji!` : "";
-        if (n === AJJI.length) {
+        $("ajji-score").textContent = n ? `${n} of ${pack.items.length} said to ajji!` : "";
+        if (n === pack.items.length) {
           finale("ಅಜ್ಜಿ ತುಂಬಾ ಖುಷಿ!",
             "All five — a whole conversation with ajji, in Kannada. That's the real thing!",
             3);
@@ -512,24 +504,41 @@
 
   const storySrc = (id) => `audio/story/${id}.mp3`;
 
-  function startStory() {
+  function renderStories() {
+    const g = $("story-grid");
+    g.innerHTML = "";
+    STORIES.forEach((story) => {
+      const b = document.createElement("button");
+      b.className = "sketchbtn cat-card";
+      b.innerHTML = `
+        <svg class="cat-art"><use href="#pic-${story.icon}"/></svg>
+        <span class="cat-kn">${story.title_kn}</span>
+        <span class="cat-en">${story.title_en}</span>`;
+      b.addEventListener("click", () => { sndTap(); startStory(story); });
+      g.appendChild(b);
+    });
+    show("s-stories");
+  }
+
+  function startStory(story) {
     state.mode = "story";
+    state.story = story;
     state.sIdx = 0;
     state.sWrong = 0;
     storyPart();
   }
 
   function storyPart() {
-    const parts = STORY.parts;
+    const parts = state.story.parts;
     if (state.sIdx >= parts.length) {
       const stars = state.sWrong === 0 ? 3 : state.sWrong <= 2 ? 2 : 1;
       return finale("ಕಥೆ ಮುಗೀತು!",
-        `"${STORY.title_en}" — the whole story, in Kannada! ` +
+        `"${state.story.title_en}" — the whole story, in Kannada! ` +
         (stars === 3 ? "You understood every question!" : "Listen again tomorrow — stories grow on you."),
         stars);
     }
     const p = parts[state.sIdx];
-    $("story-count").textContent = `${STORY.title_kn} · ${state.sIdx + 1} of ${parts.length}`;
+    $("story-count").textContent = `${state.story.title_kn} · ${state.sIdx + 1} of ${parts.length}`;
 
     if (p.type === "line") {
       $("story-card").style.display = "";
@@ -582,7 +591,7 @@
   $("act-mission").addEventListener("click", () => { sndTap(); openMissionWho(); });
   $("act-echo").addEventListener("click", () => { sndTap(); show("s-echo-lvl"); });
   $("act-ajji").addEventListener("click", () => { sndTap(); openAjji(); });
-  $("act-story").addEventListener("click", () => { sndTap(); startStory(); });
+  $("act-story").addEventListener("click", () => { sndTap(); renderStories(); });
   $("btn-howto").addEventListener("click", () => { sndTap(); openHowto(null); });
 
   document.querySelectorAll(".back-home").forEach((b) =>
@@ -592,14 +601,27 @@
       show("s-home");
     }));
 
-  // barrier game
-  document.querySelectorAll(".cat-card").forEach((el) =>
-    el.addEventListener("click", () => {
-      sndTap();
-      state.pendingCat = el.dataset.cat;
-      if (!localStorage.getItem("hk.intro")) openHowto(el.dataset.cat);
-      else show("s-players");
-    }));
+  // barrier game — category grid (6 categories + everything-mix)
+  (function renderCats() {
+    const g = $("cat-grid");
+    const cards = BARRIER_CATS.map((c) => ({ cat: c.id, icon: c.icon, kn: c.kn, en: c.en }));
+    cards.push({ cat: "mix", icon: null, kn: "ಎಲ್ಲಾ ಮಿಕ್ಸ್!", en: "everything mix" });
+    cards.forEach((c) => {
+      const b = document.createElement("button");
+      b.className = "sketchbtn cat-card";
+      b.innerHTML = `
+        <svg class="cat-art"><use href="${c.icon ? `#pic-${c.icon}` : "#ic-swap"}"/></svg>
+        <span class="cat-kn">${c.kn}</span>
+        <span class="cat-en">${c.en}</span>`;
+      b.addEventListener("click", () => {
+        sndTap();
+        state.pendingCat = c.cat;
+        if (!localStorage.getItem("hk.intro")) openHowto(c.cat);
+        else show("s-players");
+      });
+      g.appendChild(b);
+    });
+  })();
 
   $("btn-howto-next").addEventListener("click", () => {
     sndTap();
@@ -634,8 +656,8 @@
     sndTap();
     if (state.mode === "barrier") startGame(state.cat);
     else if (state.mode === "echo") show("s-echo-lvl");
-    else if (state.mode === "story") startStory();
-    else if (state.mode === "ajji") openAjji();
+    else if (state.mode === "story") renderStories();
+    else if (state.mode === "ajji") openAjji(state.ajjiPack);
     else show("s-home");
   });
   $("btn-home").addEventListener("click", () => show("s-home"));
@@ -661,7 +683,7 @@
     el.addEventListener("click", () => { sndTap(); echoRate(el.dataset.rate); }));
 
   // story
-  $("btn-story-hear").addEventListener("click", () => play(storySrc(STORY.parts[state.sIdx].id)));
+  $("btn-story-hear").addEventListener("click", () => play(storySrc(state.story.parts[state.sIdx].id)));
   $("btn-story-next").addEventListener("click", () => { sndTap(); state.sIdx++; storyPart(); });
 
   initNames();

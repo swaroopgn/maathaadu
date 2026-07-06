@@ -77,34 +77,21 @@
   <p class="status" id="status"></p>
 </div>
 
-<script src="js/content.js?v=1"></script>
+<script src="js/content.js?v=2"></script>
 <script>
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
 
-  const WORDS = [
-    { id: "naayi", kn: "ನಾಯಿ", tr: "naayi", src: "audio/animals/naayi.mp3" },
-    { id: "bekku", kn: "ಬೆಕ್ಕು", tr: "bekku", src: "audio/animals/bekku.mp3" },
-    { id: "aane", kn: "ಆನೆ", tr: "aane", src: "audio/animals/aane.mp3" },
-    { id: "huli", kn: "ಹುಲಿ", tr: "huli", src: "audio/animals/huli.mp3" },
-    { id: "hasu", kn: "ಹಸು", tr: "hasu", src: "audio/animals/hasu.mp3" },
-    { id: "kudure", kn: "ಕುದುರೆ", tr: "kudure", src: "audio/animals/kudure.mp3" },
-    { id: "meenu", kn: "ಮೀನು", tr: "meenu", src: "audio/animals/meenu.mp3" },
-    { id: "hakki", kn: "ಹಕ್ಕಿ", tr: "hakki", src: "audio/animals/hakki.mp3" },
-    { id: "anna_rice", kn: "ಅನ್ನ", tr: "anna", src: "audio/food/anna_rice.mp3" },
-    { id: "haalu", kn: "ಹಾಲು", tr: "haalu", src: "audio/food/haalu.mp3" },
-    { id: "neeru", kn: "ನೀರು", tr: "neeru", src: "audio/food/neeru.mp3" },
-    { id: "hannu", kn: "ಹಣ್ಣು", tr: "hannu", src: "audio/food/hannu.mp3" },
-    { id: "baalehannu", kn: "ಬಾಳೆಹಣ್ಣು", tr: "baalehannu", src: "audio/food/baalehannu.mp3" },
-    { id: "dose", kn: "ದೋಸೆ", tr: "dose", src: "audio/food/dose.mp3" },
-    { id: "mosaru", kn: "ಮೊಸರು", tr: "mosaru", src: "audio/food/mosaru.mp3" },
-    { id: "sihi", kn: "ಸಿಹಿ", tr: "sihi", src: "audio/food/sihi.mp3" },
-  ];
-
   const GROUPS = [
-    { title: "Game words — animals & food", items: WORDS },
-    { title: "Ajji-call phrases", items: AJJI.map((a) => ({ id: a.id, kn: a.kn, tr: a.tr, src: `audio/ajji/${a.id}.mp3` })) },
+    ...BARRIER_CATS.map((c) => ({
+      title: `Game words — ${c.en}`,
+      items: c.items.map((w) => ({ id: w.id, kn: w.kn, tr: w.tr, src: `audio/${w.grp}/${w.id}.mp3` })),
+    })),
+    ...AJJI_PACKS.map((p) => ({
+      title: `Ajji call — ${p.title}`,
+      items: p.items.map((a) => ({ id: a.id, kn: a.kn, tr: a.tr, src: `audio/ajji/${a.id}.mp3` })),
+    })),
     { title: "Mission phrases", items: MISSIONS.map((m) => ({ id: m.id, kn: m.kn, tr: m.tr, src: `audio/missions/${m.id}.mp3` })) },
   ];
 
