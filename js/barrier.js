@@ -609,7 +609,7 @@
     } else {
       localStorage.setItem("hk.intro", "1");
       if (state.pendingCat) show("s-players");
-      else show("s-home");
+      else show("s-cats");
     }
   });
 

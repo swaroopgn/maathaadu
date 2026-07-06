@@ -141,18 +141,18 @@ button { font-family: inherit; color: inherit; border: none; background: none; c
 
 /* activity hub */
 .act-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 200px));
+  display: flex;
+  flex-wrap: wrap;
   gap: 18px;
   justify-content: center;
   width: 100%;
 }
-@media (max-width: 620px) { .act-grid { grid-template-columns: repeat(2, 1fr); } }
 .act-card {
   flex-direction: column;
   gap: 2px;
   padding: 16px 10px 12px;
   min-height: 158px;
+  width: min(196px, 44vw);
   border-radius: var(--wob-a);
 }
 .act-card:nth-child(odd) { transform: rotate(-1deg); }

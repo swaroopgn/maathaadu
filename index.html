@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/barrier.css?v=3">
+<link rel="stylesheet" href="css/barrier.css?v=4">
 </head>
 <body>
 
@@ -487,11 +487,6 @@
         <span class="act-kn">ಕಥೆ ಟೈಮ್</span>
         <span class="act-en">story time</span>
       </button>
-      <button class="sketchbtn act-card" id="btn-howto">
-        <svg class="act-art"><use href="#ic-swap"/></svg>
-        <span class="act-kn">ಹೇಗೆ?</span>
-        <span class="act-en">how do we play?</span>
-      </button>
     </div>
 
     <footer class="home-foot">
@@ -516,7 +511,12 @@
         <span class="cat-en">food</span>
       </button>
     </div>
-    <button class="sketchbtn small back-home">back</button>
+    <div class="row-wrap">
+      <button class="sketchbtn small" id="btn-howto">
+        <svg class="inline-ic"><use href="#ic-swap"/></svg> how do we play?
+      </button>
+      <button class="sketchbtn small back-home">back</button>
+    </div>
   </div>
 </section>
 
@@ -745,6 +745,6 @@
 </section>
 
 <script src="js/content.js?v=1"></script>
-<script src="js/barrier.js?v=3"></script>
+<script src="js/barrier.js?v=4"></script>
 </body>
 </html>
