@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf3e6">
+<title>ನಿಮ್ಮ ಧ್ವನಿ · Your Voice — record the words for the games</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23faf3e6'/%3E%3Crect x='38' y='14' width='24' height='44' rx='12' fill='%236f9bce' stroke='%233a342b' stroke-width='5'/%3E%3Cpath d='M28 46 Q28 72 50 72 Q72 72 72 46 M50 72 L50 86 M36 88 L64 88' fill='none' stroke='%233a342b' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #faf3e6; --card: #fffdf6; --ink: #3a342b; --ink-soft: #8a8172;
+    --tomato: #d95d45; --mustard: #e0a32e; --sage: #7fa869; --blue: #6f9bce;
+    --hand: "Akaya Kanadaka", "Kalam", cursive;
+    --body: "Kalam", "Akaya Kanadaka", cursive;
+    --wob-a: 255px 18px 225px 20px / 20px 225px 18px 255px;
+    --wob-b: 18px 240px 22px 220px / 230px 20px 250px 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--body); color: var(--ink); line-height: 1.6; font-size: 1.02rem;
+    background:
+      radial-gradient(1.2px 1.2px at 22% 34%, rgba(58,52,43,.16), transparent 100%),
+      radial-gradient(1.4px 1.4px at 68% 12%, rgba(58,52,43,.13), transparent 100%),
+      var(--paper);
+    background-size: 340px 340px, 420px 420px, auto;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 26px 18px 80px; }
+  button { font-family: inherit; color: inherit; border: none; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .back {
+    display: inline-block; text-decoration: none; color: var(--ink);
+    font-family: var(--hand); font-size: 1.1rem; padding: 9px 20px;
+    background: var(--card); border: 3px solid var(--ink); border-radius: var(--wob-b);
+    box-shadow: 2px 3px 0 var(--ink); margin-bottom: 24px;
+  }
+  h1 { font-family: var(--hand); font-size: clamp(1.7rem, 6vw, 2.3rem); font-weight: 400; line-height: 1.3; transform: rotate(-.5deg); }
+  .lede { color: var(--ink-soft); margin: 10px 0 8px; }
+  .note {
+    background: var(--card); border: 3px solid var(--sage); border-radius: var(--wob-a);
+    box-shadow: 3px 4px 0 var(--sage); padding: 12px 18px; margin: 16px 0 26px;
+    font-size: .98rem;
+  }
+  h2 { font-family: var(--hand); font-size: 1.5rem; font-weight: 400; margin: 30px 0 12px; transform: rotate(-.5deg); }
+  .rows { display: flex; flex-direction: column; gap: 12px; }
+  .row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card); border: 3px solid var(--ink); border-radius: 20px 24px 22px 20px;
+    box-shadow: 2px 3px 0 var(--ink); padding: 10px 14px;
+  }
+  .row .txt { flex: 1; min-width: 0; }
+  .row .kn { font-family: var(--hand); font-size: 1.25rem; line-height: 1.3; }
+  .row .tr { font-size: .85rem; color: var(--tomato); }
+  .bt {
+    min-width: 46px; min-height: 46px; display: grid; place-items: center;
+    border: 2.5px solid var(--ink); border-radius: 45% 55% 50% 50% / 55% 45% 55% 45%;
+    background: var(--card); box-shadow: 2px 2px 0 var(--ink);
+    font-size: .78rem; font-weight: 700; padding: 0 8px;
+    transition: transform .1s ease, box-shadow .1s ease, background .15s ease;
+  }
+  .bt:active { transform: translate(2px,2px); box-shadow: 0 0 0 var(--ink); }
+  .bt.rec-on { background: #f4ddd6; }
+  .bt.has { background: #e3edd7; }
+  .bt[disabled] { opacity: .35; pointer-events: none; }
+  .status { font-family: var(--hand); font-size: 1.1rem; color: var(--sage); min-height: 1.4em; margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="parents.html">← back to the parents page</a>
+  <h1>ನಿಮ್ಮ ಧ್ವನಿ — record the words in your own voice</h1>
+  <p class="lede">The games normally use a computer voice. Record yourself (or ajji!) saying these, and the games will play <em>your</em> voice instead — research says hearing amma or appa say a phrase makes kids far more likely to use it with you.</p>
+  <div class="note">Tap <strong>rec</strong>, say the word warmly and clearly, tap <strong>stop</strong>. It saves on this device only. <strong>me</strong> plays your version, <strong>×</strong> removes it. Rows turn green once your voice is saved.</div>
+  <div id="groups"></div>
+  <p class="status" id="status"></p>
+</div>
+
+<script src="js/content.js?v=1"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+
+  const WORDS = [
+    { id: "naayi", kn: "ನಾಯಿ", tr: "naayi", src: "audio/animals/naayi.mp3" },
+    { id: "bekku", kn: "ಬೆಕ್ಕು", tr: "bekku", src: "audio/animals/bekku.mp3" },
+    { id: "aane", kn: "ಆನೆ", tr: "aane", src: "audio/animals/aane.mp3" },
+    { id: "huli", kn: "ಹುಲಿ", tr: "huli", src: "audio/animals/huli.mp3" },
+    { id: "hasu", kn: "ಹಸು", tr: "hasu", src: "audio/animals/hasu.mp3" },
+    { id: "kudure", kn: "ಕುದುರೆ", tr: "kudure", src: "audio/animals/kudure.mp3" },
+    { id: "meenu", kn: "ಮೀನು", tr: "meenu", src: "audio/animals/meenu.mp3" },
+    { id: "hakki", kn: "ಹಕ್ಕಿ", tr: "hakki", src: "audio/animals/hakki.mp3" },
+    { id: "anna_rice", kn: "ಅನ್ನ", tr: "anna", src: "audio/food/anna_rice.mp3" },
+    { id: "haalu", kn: "ಹಾಲು", tr: "haalu", src: "audio/food/haalu.mp3" },
+    { id: "neeru", kn: "ನೀರು", tr: "neeru", src: "audio/food/neeru.mp3" },
+    { id: "hannu", kn: "ಹಣ್ಣು", tr: "hannu", src: "audio/food/hannu.mp3" },
+    { id: "baalehannu", kn: "ಬಾಳೆಹಣ್ಣು", tr: "baalehannu", src: "audio/food/baalehannu.mp3" },
+    { id: "dose", kn: "ದೋಸೆ", tr: "dose", src: "audio/food/dose.mp3" },
+    { id: "mosaru", kn: "ಮೊಸರು", tr: "mosaru", src: "audio/food/mosaru.mp3" },
+    { id: "sihi", kn: "ಸಿಹಿ", tr: "sihi", src: "audio/food/sihi.mp3" },
+  ];
+
+  const GROUPS = [
+    { title: "Game words — animals & food", items: WORDS },
+    { title: "Ajji-call phrases", items: AJJI.map((a) => ({ id: a.id, kn: a.kn, tr: a.tr, src: `audio/ajji/${a.id}.mp3` })) },
+    { title: "Mission phrases", items: MISSIONS.map((m) => ({ id: m.id, kn: m.kn, tr: m.tr, src: `audio/missions/${m.id}.mp3` })) },
+  ];
+
+  let db = null;
+  const open = () => new Promise((res) => {
+    const r = indexedDB.open("hk-voice", 1);
+    r.onupgradeneeded = (e) => e.target.result.createObjectStore("clips");
+    r.onsuccess = (e) => { db = e.target.result; res(); };
+    r.onerror = () => res();
+  });
+  const idb = (mode, fn) => new Promise((res) => {
+    if (!db) return res(null);
+    const t = fn(db.transaction("clips", mode).objectStore("clips"));
+    t.onsuccess = () => res(t.result);
+    t.onerror = () => res(null);
+  });
+  const get = (id) => idb("readonly", (s) => s.get(id));
+  const set = (id, blob) => idb("readwrite", (s) => s.put(blob, id));
+  const del = (id) => idb("readwrite", (s) => s.delete(id));
+
+  let curAudio = null;
+  const play = (src, next) => {
+    if (curAudio) curAudio.pause();
+    curAudio = new Audio(src);
+    if (next) curAudio.addEventListener("ended", next);
+    curAudio.play().catch(() => {});
+  };
+
+  let rec = null, stream = null, chunks = [];
+
+  async function build() {
+    await open();
+    const box = $("groups");
+    for (const g of GROUPS) {
+      const h = document.createElement("h2");
+      h.textContent = g.title;
+      box.appendChild(h);
+      const rows = document.createElement("div");
+      rows.className = "rows";
+      for (const item of g.items) {
+        const has = !!(await get(item.id));
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <div class="txt"><div class="kn">${item.kn}</div><div class="tr">${item.tr}</div></div>
+          <button class="bt b-model">hear</button>
+          <button class="bt b-rec ${has ? "has" : ""}">${has ? "redo" : "rec"}</button>
+          <button class="bt b-mine" ${has ? "" : "disabled"}>me</button>
+          <button class="bt b-del" ${has ? "" : "disabled"}>×</button>`;
+        const bRec = row.querySelector(".b-rec");
+        const bMine = row.querySelector(".b-mine");
+        const bDel = row.querySelector(".b-del");
+        row.querySelector(".b-model").addEventListener("click", () => play(item.src));
+        bRec.addEventListener("click", async () => {
+          if (rec && rec.state === "recording") {
+            rec.onstop = async () => {
+              stream.getTracks().forEach((t) => t.stop());
+              const blob = new Blob(chunks);
+              await set(item.id, blob);
+              bRec.textContent = "redo";
+              bRec.classList.remove("rec-on");
+              bRec.classList.add("has");
+              bMine.disabled = false;
+              bDel.disabled = false;
+              $("status").textContent = `saved "${item.tr}" in your voice`;
+              play(URL.createObjectURL(blob));
+            };
+            rec.stop();
+            return;
+          }
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            chunks = [];
+            rec = new MediaRecorder(stream);
+            rec.ondataavailable = (e) => chunks.push(e.data);
+            rec.start();
+            bRec.textContent = "stop";
+            bRec.classList.add("rec-on");
+            $("status").textContent = "recording — tap stop when done";
+          } catch (e) {
+            $("status").textContent = "microphone not allowed in this browser";
+          }
+        });
+        bMine.addEventListener("click", async () => {
+          const blob = await get(item.id);
+          if (blob) play(URL.createObjectURL(blob));
+        });
+        bDel.addEventListener("click", async () => {
+          await del(item.id);
+          bRec.textContent = "rec";
+          bRec.classList.remove("has");
+          bMine.disabled = true;
+          bDel.disabled = true;
+          $("status").textContent = `removed your "${item.tr}" — games use the computer voice again`;
+        });
+        rows.appendChild(row);
+      }
+      box.appendChild(rows);
+    }
+  }
+  build();
+})();
+</script>
+</body>
+</html>

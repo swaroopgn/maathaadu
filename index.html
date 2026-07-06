@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/barrier.css?v=2">
+<link rel="stylesheet" href="css/barrier.css?v=3">
 </head>
 <body>
 
@@ -313,6 +313,59 @@
     </g>
   </symbol>
 
+  <!-- ============ activity icons ============ -->
+  <symbol id="ic-two" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="44" cy="46" r="20" fill="#fffdf6"/>
+      <path d="M26 40 Q30 24 46 24 Q60 24 62 38 Q50 32 42 34 Q32 36 26 40 Z" fill="#3a342b" stroke="none"/>
+      <circle cx="38" cy="46" r="2.2" fill="#3a342b" stroke="none"/>
+      <circle cx="50" cy="46" r="2.2" fill="#3a342b" stroke="none"/>
+      <path d="M38 54 Q44 59 50 54" fill="none" stroke-width="3"/>
+      <circle cx="80" cy="58" r="18" fill="#fffdf6"/>
+      <path d="M64 52 Q62 38 74 36 Q72 30 80 30 Q82 26 88 29 Q95 28 96 37 Q102 42 98 50 Q88 42 78 46 Q70 48 64 52 Z" fill="#3a342b" stroke="none"/>
+      <circle cx="75" cy="58" r="2" fill="#3a342b" stroke="none"/>
+      <circle cx="86" cy="58" r="2" fill="#3a342b" stroke="none"/>
+      <path d="M75 65 Q80 69 85 65" fill="none" stroke-width="3"/>
+      <path d="M30 96 Q44 82 58 92 M62 98 Q78 86 94 94" fill="none" stroke-width="3.5"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-flag" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M34 16 L32 104" fill="none" stroke-width="5"/>
+      <path d="M36 22 Q60 12 66 24 Q72 34 94 26 L90 58 Q70 66 62 56 Q54 46 38 54 Z" fill="#d95d45"/>
+      <circle cx="60" cy="40" r="8" fill="#e0a32e"/>
+      <ellipse cx="32" cy="106" rx="14" ry="4" fill="#c8d8c0"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-mic" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="46" y="18" width="28" height="52" rx="14" fill="#6f9bce"/>
+      <path d="M48 34 L72 34 M48 46 L72 46" stroke-width="3" fill="none"/>
+      <path d="M34 54 Q34 84 60 84 Q86 84 86 54" fill="none"/>
+      <path d="M60 84 L60 100 M44 102 L76 102" fill="none"/>
+      <path d="M24 34 Q18 44 24 54 M96 34 Q102 44 96 54" fill="none" stroke="#e0a32e" stroke-width="4"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-phone" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28 40 Q26 22 42 24 L52 26 Q58 28 56 38 L53 50 Q66 66 80 72 L90 64 Q98 58 102 66 L106 76 Q110 90 94 92 Q56 94 32 58 Q26 50 28 40 Z" fill="#7fa869"/>
+      <path d="M64 22 Q78 18 88 28 M68 34 Q76 32 82 38" fill="none" stroke="#e0a32e" stroke-width="4"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-book" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 30 Q42 18 22 24 L22 88 Q42 82 60 92 Q78 82 98 88 L98 24 Q78 18 60 30 Z" fill="#fffdf6"/>
+      <path d="M60 30 L60 92" fill="none"/>
+      <path d="M32 40 Q44 36 52 42 M32 54 Q44 50 52 56 M32 68 Q44 64 52 70" fill="none" stroke-width="3" opacity=".6"/>
+      <path d="M68 42 Q80 36 88 40 M68 56 Q80 50 88 54" fill="none" stroke-width="3" opacity=".6"/>
+      <circle cx="78" cy="70" r="7" fill="#d95d45"/>
+    </g>
+  </symbol>
+
   <!-- ============ how-to-play comic scenes ============ -->
   <symbol id="scene-1" viewBox="0 0 280 170">
     <g filter="url(#rough)" stroke="#3a342b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
@@ -407,7 +460,50 @@
     <div class="subtitle">helu–kelu · say it &amp; hear it</div>
     <p class="tagline">A Kannada game for two brothers.<br>One says the secret word — the other finds it!</p>
 
-    <h2 class="pick-label">what shall we play with?</h2>
+    <h2 class="pick-label">what shall we do today?</h2>
+    <div class="act-grid">
+      <button class="sketchbtn act-card" id="act-barrier">
+        <svg class="act-art"><use href="#ic-two"/></svg>
+        <span class="act-kn">ಹೇಳು-ಕೇಳು</span>
+        <span class="act-en">say &amp; listen · 2 players</span>
+      </button>
+      <button class="sketchbtn act-card" id="act-mission">
+        <svg class="act-art"><use href="#ic-flag"/></svg>
+        <span class="act-kn">ಇವತ್ತಿನ ಸವಾಲು</span>
+        <span class="act-en">today's mission</span>
+      </button>
+      <button class="sketchbtn act-card" id="act-echo">
+        <svg class="act-art"><use href="#ic-mic"/></svg>
+        <span class="act-kn">ಗಿಣಿ ಆಟ</span>
+        <span class="act-en">parrot echo</span>
+      </button>
+      <button class="sketchbtn act-card" id="act-ajji">
+        <svg class="act-art"><use href="#ic-phone"/></svg>
+        <span class="act-kn">ಅಜ್ಜಿಗೆ ಫೋನ್</span>
+        <span class="act-en">call ajji</span>
+      </button>
+      <button class="sketchbtn act-card" id="act-story">
+        <svg class="act-art"><use href="#ic-book"/></svg>
+        <span class="act-kn">ಕಥೆ ಟೈಮ್</span>
+        <span class="act-en">story time</span>
+      </button>
+      <button class="sketchbtn act-card" id="btn-howto">
+        <svg class="act-art"><use href="#ic-swap"/></svg>
+        <span class="act-kn">ಹೇಗೆ?</span>
+        <span class="act-en">how do we play?</span>
+      </button>
+    </div>
+
+    <footer class="home-foot">
+      <a href="parents.html">for parents — how kids learn a home language</a>
+    </footer>
+  </div>
+</section>
+
+<!-- ======================= CATEGORY PICK (barrier game) ======================= -->
+<section id="s-cats" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title">what shall we play with?</h2>
     <div class="cat-row">
       <button class="sketchbtn cat-card" data-cat="animals">
         <svg class="cat-art"><use href="#pic-naayi"/></svg>
@@ -420,14 +516,125 @@
         <span class="cat-en">food</span>
       </button>
     </div>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
 
-    <button class="sketchbtn small" id="btn-howto">
-      <svg class="inline-ic"><use href="#ic-swap"/></svg> how do we play?
+<!-- ======================= MISSION ======================= -->
+<section id="s-mission-who" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title">whose mission is it?</h2>
+    <div class="players-row">
+      <button class="sketchbtn player-card" id="mw-p1">
+        <svg class="pav"><use href="#av-p1"/></svg>
+        <span class="mw-name" id="mw-name-p1">Player 1</span>
+      </button>
+      <button class="sketchbtn player-card" id="mw-p2">
+        <svg class="pav"><use href="#av-p2"/></svg>
+        <span class="mw-name" id="mw-name-p2">Player 2</span>
+      </button>
+    </div>
+    <p class="coach">A new secret mission every day — say it to a real person,<br>and a grown-up gives you the star.</p>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
+
+<section id="s-mission" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title" id="mission-title">Today's mission</h2>
+    <div class="streak-line" id="mission-streak"></div>
+    <div class="secret-card framed">
+      <div class="mission-do" id="mission-do"></div>
+      <div class="secret-kn" id="mission-kn"></div>
+      <div class="secret-tr" id="mission-tr"></div>
+    </div>
+    <div class="row-wrap">
+      <button class="sketchbtn small" id="btn-mission-hear">
+        <svg class="inline-ic"><use href="#ic-sound"/></svg> hear it
+      </button>
+      <button class="sketchbtn small" id="btn-mission-slow">
+        <svg class="inline-ic"><use href="#ic-ear"/></svg> slowly
+      </button>
+      <button class="sketchbtn small" id="btn-mission-rec">
+        <svg class="inline-ic"><use href="#ic-mic"/></svg> <span id="mission-rec-label">practice</span>
+      </button>
+    </div>
+    <p class="coach" id="mission-coach">Practice here, then go say it to a real person — for real!</p>
+    <button class="sketchbtn big primary" id="btn-mission-done">
+      <svg class="inline-ic"><use href="#ic-star"/></svg> <span id="mission-done-label">grown-up: they said it!</span>
     </button>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
 
-    <footer class="home-foot">
-      <a href="parents.html">for parents — how kids learn a home language</a>
-    </footer>
+<!-- ======================= ECHO ======================= -->
+<section id="s-echo-lvl" class="screen">
+  <div class="wrap center">
+    <div class="mascot small-mascot"><svg><use href="#art-parrot"/></svg></div>
+    <h2 class="step-title">Can you say it just like the parrot?</h2>
+    <div class="row-wrap">
+      <button class="sketchbtn lvl-card" data-lvl="1"><span class="lvl-big">1</span><span>little words</span></button>
+      <button class="sketchbtn lvl-card" data-lvl="2"><span class="lvl-big">2</span><span>sentences</span></button>
+      <button class="sketchbtn lvl-card" data-lvl="3"><span class="lvl-big">3</span><span>big-kid talk</span></button>
+    </div>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
+
+<section id="s-echo" class="screen">
+  <div class="wrap center">
+    <div class="score-line" id="echo-count"></div>
+    <div class="secret-card framed">
+      <div class="secret-kn" id="echo-kn"></div>
+      <div class="secret-tr" id="echo-tr"></div>
+    </div>
+    <div class="row-wrap">
+      <button class="sketchbtn small" id="btn-echo-hear">
+        <svg class="inline-ic"><use href="#ic-sound"/></svg> hear it
+      </button>
+      <button class="sketchbtn small" id="btn-echo-slow">
+        <svg class="inline-ic"><use href="#ic-ear"/></svg> slowly
+      </button>
+    </div>
+    <button class="sketchbtn big primary" id="btn-echo-rec"><span id="echo-rec-label">record me!</span></button>
+    <p class="coach" id="echo-note">Listen first, then record yourself saying it.</p>
+    <div class="row-wrap" id="echo-rate" hidden>
+      <button class="sketchbtn small" data-rate="again">try again</button>
+      <button class="sketchbtn small" data-rate="almost">almost!</button>
+      <button class="sketchbtn small primary" data-rate="same">sounds the same!</button>
+    </div>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
+
+<!-- ======================= AJJI CALL ======================= -->
+<section id="s-ajji" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title">Get ready to call ajji!</h2>
+    <p class="coach">Practice these five, then make the real call.<br>Tick each one you actually said to ajji.</p>
+    <div class="ajji-list" id="ajji-list"></div>
+    <div class="score-line" id="ajji-score"></div>
+    <button class="sketchbtn small back-home">back</button>
+  </div>
+</section>
+
+<!-- ======================= STORY ======================= -->
+<section id="s-story" class="screen">
+  <div class="wrap center">
+    <div class="score-line" id="story-count"></div>
+    <div class="secret-card framed story-card" id="story-card">
+      <svg class="secret-art" id="story-art"><use href="#pic-bekku"/></svg>
+      <div class="story-kn" id="story-kn"></div>
+      <div class="story-en" id="story-en"></div>
+    </div>
+    <div class="row-wrap" id="story-opts" hidden></div>
+    <div class="row-wrap">
+      <button class="sketchbtn small" id="btn-story-hear">
+        <svg class="inline-ic"><use href="#ic-sound"/></svg> hear it again
+      </button>
+      <button class="sketchbtn big primary" id="btn-story-next">next</button>
+    </div>
+    <button class="sketchbtn small back-home">back</button>
   </div>
 </section>
 
@@ -537,6 +744,7 @@
   </div>
 </section>
 
-<script src="js/barrier.js?v=2"></script>
+<script src="js/content.js?v=1"></script>
+<script src="js/barrier.js?v=3"></script>
 </body>
 </html>

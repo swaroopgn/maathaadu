@@ -217,6 +217,13 @@
     <p class="lede">A short guide to the research behind this game: what "receptive bilingualism" is, why it is not a failure (yours or theirs), and the surprisingly specific things that turn understanding into speaking.</p>
   </header>
 
+  <div class="pull go" id="week-move" style="display:none">
+    <span style="font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;font-family:Kalam">this week's dinner-table move</span><br>
+    <span id="week-move-title"></span><br>
+    <span id="week-move-say" style="font-size:1rem;font-family:Kalam"></span>
+    <a href="#toolkit" style="font-size:.9rem;font-family:Kalam"> — details in the toolkit below</a>
+  </div>
+
   <h2><span class="n">1</span>It has a name, and it's very common</h2>
   <p>A child who understands a home language well but doesn't speak it is called a <strong>receptive bilingual</strong>. Among families raising kids in one language while the world outside speaks another, this is one of the most common outcomes there is — documented across Japanese-, Spanish-, German- and Korean-speaking families all over the world.</p>
   <p>Here is the important part: <strong>your child is not refusing, and hasn't "failed to learn."</strong> The comprehension is real language knowledge — years of it. What's missing is only the production habit. Those are different skills, and research on heritage speakers (Silvina Montrul and others) consistently finds comprehension running far ahead of speaking. The gap is normal. It is also very fixable.</p>
@@ -238,7 +245,7 @@
   <p>Memory research adds a nice bonus: the <strong>"production effect"</strong> — words a child says out loud are remembered dramatically better than words merely heard or tapped on a screen, and the effect is strongest in children.</p>
   <div class="pull">So the recipe is: <strong>manufacture small moments where Kannada is the only key that opens the door</strong> — and make every practice rep end in the mouth, not the finger.</div>
 
-  <h2><span class="n">5</span>The dinner-table toolkit</h2>
+  <h2 id="toolkit"><span class="n">5</span>The dinner-table toolkit</h2>
   <p>These are the documented "discourse strategies" from the family-bilingualism research, ordered from gentlest to strongest. They work in the exact moment your child answers you in English. Pick <em>one</em> and use it for a week — consistency beats intensity.</p>
 
   <div class="cards">
@@ -279,6 +286,8 @@
   <h2><span class="n">6</span>Where this game fits</h2>
   <p>Honestly? The game is the <em>practice court</em>, not the match. ಹೇಳು-ಕೇಳು is built directly on the strongest finding above: it makes Kannada <strong>momentarily necessary between the two brothers</strong>. The speaker only scores if his Kannada actually carries the meaning across to his brother — real communication, tiny stakes, and the points always go to the team, never against each other.</p>
   <p>That's also why every round ends in the mouth, not the finger: the speaker must say the word out loud before anything else happens, and the native audio replays afterwards so the sound settles in. When they play, resist the urge to coach mid-round — let the brothers repair misunderstandings themselves in whatever Kannada they can find. That repair <em>is</em> the exercise.</p>
+  <p>Beyond the two-player game, the home screen now has <strong>daily missions</strong> (one real-world Kannada speech act a day, you give the star), the <strong>parrot echo</strong> (record-and-compare shadowing), <strong>ajji-call prep</strong> (rehearse five phrases before the weekly call — a grandparent is the most "necessary" Kannada audience there is), and a <strong>story</strong> with listen-and-tap questions.</p>
+  <div class="pull">One more thing, and it matters: <a href="record.html"><strong>record the game words in your own voice</strong></a>. The games will play amma's or appa's voice instead of the computer's — hearing <em>you</em> say a phrase makes it far more likely to be used <em>with</em> you.</div>
 
   <div class="divider"><svg><use href="#ic-squiggle"/></svg></div>
 
@@ -300,5 +309,21 @@
   </footer>
 
 </div>
+<script>
+(() => {
+  const MOVES = [
+    { t: "Move 1 · Minimal grasp — the friendly “huh?”", s: "When they answer in English: ಏನು? …then wait." },
+    { t: "Move 2 · Expressed guess — offer the words back", s: "Recast their meaning as a Kannada yes/no question and let them just confirm." },
+    { t: "Move 3 · Recast and pause", s: "Say their English sentence back in Kannada, then leave a beat of silence." },
+    { t: "Move 4 · Either/or questions", s: "Ask questions that contain their answer: ದೋಸೆ ಬೇಕಾ, ಇಡ್ಲಿ ಬೇಕಾ?" },
+    { t: "Move 5 · Start the sentence for them", s: "Give the frame, they finish it: ನನಗೆ ಬೇಕು… ?" },
+  ];
+  const week = Math.floor(Date.now() / (7 * 864e5));
+  const m = MOVES[week % MOVES.length];
+  document.getElementById("week-move-title").textContent = m.t;
+  document.getElementById("week-move-say").textContent = m.s;
+  document.getElementById("week-move").style.display = "";
+})();
+</script>
 </body>
 </html>

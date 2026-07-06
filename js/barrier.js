@@ -1,6 +1,6 @@
-/* ಹೇಳು-ಕೇಳು (Helu-Kelu) — sibling barrier game.
-   One player sees a secret word and says it in Kannada out loud;
-   the other finds the matching picture. Points go to the team. */
+/* ಹೇಳು-ಕೇಳು — Kannada speaking games for two kids.
+   Activities: barrier game, daily mission, parrot echo, ajji call, story time.
+   Parent-recorded voice clips (IndexedDB, see record.html) override TTS audio. */
 (() => {
   "use strict";
 
@@ -8,7 +8,6 @@
 
   const CATS = {
     animals: {
-      kn: "ಪ್ರಾಣಿಗಳು",
       items: [
         { id: "naayi",   kn: "ನಾಯಿ",    tr: "naayi",   en: "dog" },
         { id: "bekku",   kn: "ಬೆಕ್ಕು",   tr: "bekku",   en: "cat" },
@@ -21,7 +20,6 @@
       ],
     },
     food: {
-      kn: "ತಿಂಡಿ ಊಟ",
       items: [
         { id: "anna_rice",  kn: "ಅನ್ನ",       tr: "anna",       en: "rice" },
         { id: "haalu",      kn: "ಹಾಲು",      tr: "haalu",      en: "milk" },
@@ -46,34 +44,44 @@
   const GRID = 6;
 
   const state = {
-    cat: null,
-    pendingCat: null,
-    slide: 0,
-    round: 0,
-    score: 0,
-    speaker: "p1",
-    secret: null,
-    used: [],
-    players: null,
+    mode: null,          // barrier | mission | echo | ajji | story
+    cat: null, pendingCat: null, slide: 0,
+    round: 0, score: 0, speaker: "p1", secret: null, used: [], players: null,
+    phase: null, answered: false,
+    mIdx: 0, mission: null,                      // mission mode
+    eQueue: [], eIdx: 0, eSames: 0, eBlob: null, // echo mode
+    sIdx: 0, sWrong: 0,                          // story mode
     audio: null,
   };
 
-  /* ---------------- players ---------------- */
+  const todayStr = () => new Date().toLocaleDateString("sv");
+  const yesterdayStr = () => new Date(Date.now() - 864e5).toLocaleDateString("sv");
 
-  function readPlayers() {
-    const clean = (v, fb) => (v || "").trim().slice(0, 12) || fb;
-    return {
-      p1: { name: clean($("name-p1").value, "Player 1"), av: "#av-p1" },
-      p2: { name: clean($("name-p2").value, "Player 2"), av: "#av-p2" },
-    };
-  }
+  /* ---------------- parent-voice store (shared with record.html) ---------------- */
 
-  function initNames() {
-    $("name-p1").value = localStorage.getItem("hk.p1") || "";
-    $("name-p2").value = localStorage.getItem("hk.p2") || "";
-    $("name-p1").addEventListener("input", (e) => localStorage.setItem("hk.p1", e.target.value));
-    $("name-p2").addEventListener("input", (e) => localStorage.setItem("hk.p2", e.target.value));
-  }
+  const VDB = {
+    db: null,
+    open() {
+      return new Promise((res) => {
+        try {
+          const r = indexedDB.open("hk-voice", 1);
+          r.onupgradeneeded = (e) => e.target.result.createObjectStore("clips");
+          r.onsuccess = (e) => { this.db = e.target.result; res(); };
+          r.onerror = () => res();
+        } catch (e) { res(); }
+      });
+    },
+    get(id) {
+      return new Promise((res) => {
+        if (!this.db) return res(null);
+        try {
+          const t = this.db.transaction("clips").objectStore("clips").get(id);
+          t.onsuccess = () => res(t.result || null);
+          t.onerror = () => res(null);
+        } catch (e) { res(null); }
+      });
+    },
+  };
 
   /* ---------------- audio ---------------- */
 
@@ -83,7 +91,25 @@
     state.audio = a;
     if (next) a.addEventListener("ended", next);
     a.play().catch(() => {});
+    return a;
   }
+
+  function playBlob(blob, next) {
+    const url = URL.createObjectURL(blob);
+    const a = play(url, () => {
+      URL.revokeObjectURL(url);
+      if (next) next();
+    });
+    return a;
+  }
+
+  // parent recording (by id) wins over the TTS file
+  async function playOr(id, src, next) {
+    const blob = await VDB.get(id);
+    if (blob) playBlob(blob, next);
+    else play(src, next);
+  }
+
   const wordSrc = (item, slow) => `audio/${state.cat}/${item.id}${slow ? "_slow" : ""}.mp3`;
   const praiseSrc = () => `audio/praise/${PRAISE_IDS[Math.floor(Math.random() * PRAISE_IDS.length)]}.mp3`;
 
@@ -106,7 +132,31 @@
   const sndBad = () => beep([230, 180], 0.15, "sawtooth", 0.06);
   const sndTap = () => beep([420], 0.06, "square", 0.06);
 
-  /* ---------------- helpers ---------------- */
+  /* ---------------- microphone ---------------- */
+
+  const mic = {
+    rec: null, stream: null, chunks: [],
+    supported: () => !!(navigator.mediaDevices && window.MediaRecorder),
+    async start() {
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.chunks = [];
+      this.rec = new MediaRecorder(this.stream);
+      this.rec.ondataavailable = (e) => this.chunks.push(e.data);
+      this.rec.start();
+    },
+    stop() {
+      return new Promise((res) => {
+        this.rec.onstop = () => {
+          this.stream.getTracks().forEach((t) => t.stop());
+          res(new Blob(this.chunks));
+        };
+        this.rec.stop();
+      });
+    },
+    recording() { return this.rec && this.rec.state === "recording"; },
+  };
+
+  /* ---------------- shared helpers ---------------- */
 
   function show(id) {
     document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -126,8 +176,34 @@
   const other = (p) => (p === "p1" ? "p2" : "p1");
   const setArt = (el, ref) => el.querySelector("use").setAttribute("href", ref);
   const scoreText = () => `team score: ${state.score} of ${state.round}`;
+  const pname = (k) => (localStorage.getItem(`hk.${k}`) || "").trim().slice(0, 12) || (k === "p1" ? "Player 1" : "Player 2");
 
-  /* ---------------- how-to comic ---------------- */
+  function readPlayers() {
+    const clean = (v, fb) => (v || "").trim().slice(0, 12) || fb;
+    return {
+      p1: { name: clean($("name-p1").value, "Player 1"), av: "#av-p1" },
+      p2: { name: clean($("name-p2").value, "Player 2"), av: "#av-p2" },
+    };
+  }
+
+  function initNames() {
+    $("name-p1").value = localStorage.getItem("hk.p1") || "";
+    $("name-p2").value = localStorage.getItem("hk.p2") || "";
+    $("name-p1").addEventListener("input", (e) => localStorage.setItem("hk.p1", e.target.value));
+    $("name-p2").addEventListener("input", (e) => localStorage.setItem("hk.p2", e.target.value));
+  }
+
+  function finale(title, sub, stars, praise = true) {
+    $("final-title").textContent = title;
+    $("final-stars").innerHTML =
+      Array.from({ length: 3 }, (_, i) =>
+        `<svg><use href="#${i < stars ? "ic-star" : "ic-star-empty"}"/></svg>`).join("");
+    $("final-sub").textContent = sub;
+    show("s-final");
+    if (praise) play(praiseSrc());
+  }
+
+  /* ================= how-to comic ================= */
 
   function openHowto(pendingCat) {
     state.pendingCat = pendingCat;
@@ -146,9 +222,10 @@
       state.slide < SLIDES.length - 1 ? "next" : (state.pendingCat ? "got it — let's play!" : "got it!");
   }
 
-  /* ---------------- flow ---------------- */
+  /* ================= barrier game ================= */
 
   function startGame(cat) {
+    state.mode = "barrier";
     state.cat = cat;
     state.players = readPlayers();
     state.round = 0;
@@ -159,7 +236,7 @@
   }
 
   function nextRound() {
-    if (state.round >= ROUNDS) return showFinal();
+    if (state.round >= ROUNDS) return barrierFinal();
 
     const pool = CATS[state.cat].items.filter((i) => !state.used.includes(i.id));
     state.secret = pool[Math.floor(Math.random() * pool.length)];
@@ -238,29 +315,284 @@
     $("btn-next").textContent = state.round >= ROUNDS ? "see our score!" : "next round";
     show("s-result");
 
-    if (hit) play(wordSrc(state.secret), () => play(praiseSrc()));
+    if (hit) playOr(state.secret.id, wordSrc(state.secret), () => play(praiseSrc()));
     else play(wordSrc(state.secret, true));
   }
 
-  function showFinal() {
+  function barrierFinal() {
     const s = state.score;
     const { p1, p2 } = state.players;
     const stars = s >= 5 ? 3 : s >= 3 ? 2 : 1;
-    $("final-title").textContent = `Team ${p1.name} & ${p2.name}!`;
-    $("final-stars").innerHTML =
-      Array.from({ length: 3 }, (_, i) =>
-        `<svg><use href="#${i < stars ? "ic-star" : "ic-star-empty"}"/></svg>`).join("");
-    $("final-sub").textContent =
+    finale(
+      `Team ${p1.name} & ${p2.name}!`,
       `You got ${s} of ${ROUNDS} words across to each other. ` +
       (stars === 3 ? "Your Kannada made it every time — super team!"
         : stars === 2 ? "Great talking! One more game to beat it?"
-        : "The words are warming up — go again!");
-    show("s-final");
-    play(praiseSrc());
+        : "The words are warming up — go again!"),
+      stars);
   }
 
-  /* ---------------- wire up ---------------- */
+  /* ================= daily mission ================= */
 
+  const missionSrc = (m, slow) => `audio/missions/${m.id}${slow ? "_slow" : ""}.mp3`;
+
+  function missionFor(pIdx) {
+    const day = Math.floor(Date.now() / 864e5);
+    return MISSIONS[(day + pIdx * 7) % MISSIONS.length];
+  }
+
+  function openMissionWho() {
+    $("mw-name-p1").textContent = pname("p1");
+    $("mw-name-p2").textContent = pname("p2");
+    show("s-mission-who");
+  }
+
+  function openMission(pIdx) {
+    state.mode = "mission";
+    state.mIdx = pIdx;
+    state.mission = missionFor(pIdx);
+    const name = pname(pIdx === 0 ? "p1" : "p2");
+    const done = localStorage.getItem(`hk.mdone.${pIdx}`) === todayStr();
+    const streak = +(localStorage.getItem(`hk.mstreak.${pIdx}`) || 0);
+
+    $("mission-title").textContent = `${name}'s mission today`;
+    $("mission-streak").textContent = streak > 1 ? `mission streak: ${streak} days!` : "";
+    $("mission-do").textContent = state.mission.do;
+    $("mission-kn").textContent = state.mission.kn;
+    $("mission-tr").textContent = state.mission.tr;
+    $("mission-rec-label").textContent = "practice";
+    $("mission-coach").textContent = done
+      ? "Done for today — come back tomorrow for a new one!"
+      : "Practice here, then go say it to a real person — for real!";
+    $("mission-done-label").textContent = done ? "done for today!" : "grown-up: they said it!";
+    $("btn-mission-done").disabled = done;
+    show("s-mission");
+    playOr(state.mission.id, missionSrc(state.mission));
+  }
+
+  function missionVerify() {
+    const pIdx = state.mIdx;
+    if (localStorage.getItem(`hk.mdone.${pIdx}`) === todayStr()) return;
+    const prevDay = localStorage.getItem(`hk.mdone.${pIdx}`);
+    const streak = prevDay === yesterdayStr()
+      ? +(localStorage.getItem(`hk.mstreak.${pIdx}`) || 0) + 1 : 1;
+    localStorage.setItem(`hk.mdone.${pIdx}`, todayStr());
+    localStorage.setItem(`hk.mstreak.${pIdx}`, String(streak));
+    sndGood();
+    finale(
+      `ಭೇಷ್, ${pname(pIdx === 0 ? "p1" : "p2")}!`,
+      streak > 1
+        ? `Mission done — that's ${streak} days in a row. Real Kannada, said to a real person!`
+        : "Mission done — real Kannada, said to a real person. New mission tomorrow!",
+      streak >= 3 ? 3 : streak === 2 ? 2 : 1);
+  }
+
+  async function missionPractice() {
+    const label = $("mission-rec-label");
+    if (!mic.supported()) { label.textContent = "no mic here"; return; }
+    if (mic.recording()) {
+      const blob = await mic.stop();
+      label.textContent = "practice";
+      playOr(state.mission.id, missionSrc(state.mission), () => playBlob(blob));
+    } else {
+      try {
+        await mic.start();
+        label.textContent = "stop";
+      } catch (e) { label.textContent = "mic not allowed"; }
+    }
+  }
+
+  /* ================= parrot echo ================= */
+
+  const echoSrc = (e, slow) => `audio/echo/${e.id}${slow ? "_slow" : ""}.mp3`;
+
+  function startEcho(lvl) {
+    state.mode = "echo";
+    state.eQueue = shuffle(ECHO.filter((e) => e.lvl === lvl)).slice(0, 3);
+    state.eIdx = 0;
+    state.eSames = 0;
+    echoItem();
+  }
+
+  function echoItem() {
+    const e = state.eQueue[state.eIdx];
+    $("echo-count").textContent = `${state.eIdx + 1} of ${state.eQueue.length}`;
+    $("echo-kn").textContent = e.kn;
+    $("echo-tr").textContent = e.tr;
+    $("echo-rec-label").textContent = "record me!";
+    $("echo-note").textContent = "Listen first, then record yourself saying it.";
+    $("echo-rate").hidden = true;
+    show("s-echo");
+    playOr(e.id, echoSrc(e));
+  }
+
+  async function echoRecord() {
+    const e = state.eQueue[state.eIdx];
+    const label = $("echo-rec-label");
+    if (!mic.supported()) { $("echo-note").textContent = "No microphone here — just say it out loud!"; return; }
+    if (mic.recording()) {
+      state.eBlob = await mic.stop();
+      label.textContent = "record again";
+      $("echo-note").textContent = "The parrot… then you. Do you sound the same?";
+      playOr(e.id, echoSrc(e), () => playBlob(state.eBlob, () => { $("echo-rate").hidden = false; }));
+    } else {
+      try {
+        await mic.start();
+        label.textContent = "stop";
+        $("echo-note").textContent = "Recording… say it now, then tap stop.";
+        $("echo-rate").hidden = true;
+      } catch (err) { $("echo-note").textContent = "Mic not allowed — just say it out loud!"; }
+    }
+  }
+
+  function echoRate(rate) {
+    if (rate === "again") { $("echo-rate").hidden = true; return; }
+    if (rate === "same") state.eSames++;
+    sndGood();
+    state.eIdx++;
+    if (state.eIdx < state.eQueue.length) return echoItem();
+    const stars = state.eSames === 3 ? 3 : state.eSames >= 1 ? 2 : 1;
+    finale("ಗಿಣಿ ಭೇಷ್ ಅಂತು!",
+      `You echoed ${state.eQueue.length} sentences out loud` +
+      (state.eSames ? ` — and ${state.eSames} sounded just like the parrot!` : " — great practice!"),
+      stars);
+  }
+
+  /* ================= ajji call ================= */
+
+  const ajjiSrc = (a, slow) => `audio/ajji/${a.id}${slow ? "_slow" : ""}.mp3`;
+
+  function openAjji() {
+    state.mode = "ajji";
+    const list = $("ajji-list");
+    list.innerHTML = "";
+    AJJI.forEach((a) => {
+      const row = document.createElement("div");
+      row.className = "ajji-row framed";
+      row.innerHTML = `
+        <button class="abtn a-play" aria-label="hear it"><svg><use href="#ic-sound"/></svg></button>
+        <div class="a-txt">
+          <div class="a-kn">${a.kn}</div>
+          <div class="a-tr">${a.tr}</div>
+          <div class="a-en">${a.en}</div>
+        </div>
+        <button class="abtn a-rec" aria-label="practice"><svg><use href="#ic-mic"/></svg></button>
+        <button class="abtn a-tick" aria-label="I said it to ajji"><svg><use href="#ic-check"/></svg></button>`;
+      row.querySelector(".a-play").addEventListener("click", () => playOr(a.id, ajjiSrc(a)));
+      const recBtn = row.querySelector(".a-rec");
+      recBtn.addEventListener("click", async () => {
+        if (!mic.supported()) return;
+        if (mic.recording()) {
+          const blob = await mic.stop();
+          recBtn.classList.remove("rec-on");
+          playOr(a.id, ajjiSrc(a), () => playBlob(blob));
+        } else {
+          try { await mic.start(); recBtn.classList.add("rec-on"); } catch (e) { /* no mic */ }
+        }
+      });
+      row.querySelector(".a-tick").addEventListener("click", (ev) => {
+        const btn = ev.currentTarget;
+        btn.classList.toggle("ticked");
+        sndTap();
+        const n = list.querySelectorAll(".a-tick.ticked").length;
+        $("ajji-score").textContent = n ? `${n} of ${AJJI.length} said to ajji!` : "";
+        if (n === AJJI.length) {
+          finale("ಅಜ್ಜಿ ತುಂಬಾ ಖುಷಿ!",
+            "All five — a whole conversation with ajji, in Kannada. That's the real thing!",
+            3);
+        }
+      });
+      list.appendChild(row);
+    });
+    $("ajji-score").textContent = "";
+    show("s-ajji");
+  }
+
+  /* ================= story time ================= */
+
+  const storySrc = (id) => `audio/story/${id}.mp3`;
+
+  function startStory() {
+    state.mode = "story";
+    state.sIdx = 0;
+    state.sWrong = 0;
+    storyPart();
+  }
+
+  function storyPart() {
+    const parts = STORY.parts;
+    if (state.sIdx >= parts.length) {
+      const stars = state.sWrong === 0 ? 3 : state.sWrong <= 2 ? 2 : 1;
+      return finale("ಕಥೆ ಮುಗೀತು!",
+        `"${STORY.title_en}" — the whole story, in Kannada! ` +
+        (stars === 3 ? "You understood every question!" : "Listen again tomorrow — stories grow on you."),
+        stars);
+    }
+    const p = parts[state.sIdx];
+    $("story-count").textContent = `${STORY.title_kn} · ${state.sIdx + 1} of ${parts.length}`;
+
+    if (p.type === "line") {
+      $("story-card").style.display = "";
+      setArt($("story-art"), `#pic-${p.art}`);
+      $("story-kn").textContent = p.kn;
+      $("story-en").textContent = p.en;
+      $("story-opts").hidden = true;
+      $("story-opts").innerHTML = "";
+      $("btn-story-next").style.display = "";
+    } else {
+      $("story-card").style.display = "";
+      setArt($("story-art"), "#art-parrot");
+      $("story-kn").textContent = p.kn;
+      $("story-en").textContent = "tap the right picture!";
+      const box = $("story-opts");
+      box.innerHTML = "";
+      box.hidden = false;
+      $("btn-story-next").style.display = "none";
+      state.answered = false;
+      shuffle(p.opts).forEach((optId) => {
+        const b = document.createElement("button");
+        b.className = "story-opt";
+        b.innerHTML = `<svg><use href="#pic-${optId}"/></svg>`;
+        b.addEventListener("click", () => {
+          if (state.answered) return;
+          if (optId === p.ans) {
+            state.answered = true;
+            b.classList.add("correct");
+            sndGood();
+            setTimeout(() => { state.sIdx++; storyPart(); }, 800);
+          } else {
+            state.sWrong++;
+            b.classList.add("wrong");
+            sndBad();
+            setTimeout(() => b.classList.remove("wrong"), 500);
+            play(storySrc(p.id));
+          }
+        });
+        box.appendChild(b);
+      });
+    }
+    show("s-story");
+    play(storySrc(p.id));
+  }
+
+  /* ================= wire up ================= */
+
+  // hub
+  $("act-barrier").addEventListener("click", () => { sndTap(); show("s-cats"); });
+  $("act-mission").addEventListener("click", () => { sndTap(); openMissionWho(); });
+  $("act-echo").addEventListener("click", () => { sndTap(); show("s-echo-lvl"); });
+  $("act-ajji").addEventListener("click", () => { sndTap(); openAjji(); });
+  $("act-story").addEventListener("click", () => { sndTap(); startStory(); });
+  $("btn-howto").addEventListener("click", () => { sndTap(); openHowto(null); });
+
+  document.querySelectorAll(".back-home").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (state.audio) state.audio.pause();
+      if (mic.recording()) mic.stop();
+      show("s-home");
+    }));
+
+  // barrier game
   document.querySelectorAll(".cat-card").forEach((el) =>
     el.addEventListener("click", () => {
       sndTap();
@@ -268,8 +600,6 @@
       if (!localStorage.getItem("hk.intro")) openHowto(el.dataset.cat);
       else show("s-players");
     }));
-
-  $("btn-howto").addEventListener("click", () => { sndTap(); openHowto(null); });
 
   $("btn-howto-next").addEventListener("click", () => {
     sndTap();
@@ -296,10 +626,44 @@
 
   $("btn-remind").addEventListener("click", () => play(wordSrc(state.secret, true)));
   $("btn-said").addEventListener("click", () => { sndTap(); showListenerPass(); });
-  $("btn-result-hear").addEventListener("click", () => play(wordSrc(state.secret)));
+  $("btn-result-hear").addEventListener("click", () => playOr(state.secret.id, wordSrc(state.secret)));
   $("btn-next").addEventListener("click", () => { sndTap(); nextRound(); });
-  $("btn-again").addEventListener("click", () => { sndTap(); startGame(state.cat); });
+
+  // final screen (shared)
+  $("btn-again").addEventListener("click", () => {
+    sndTap();
+    if (state.mode === "barrier") startGame(state.cat);
+    else if (state.mode === "echo") show("s-echo-lvl");
+    else if (state.mode === "story") startStory();
+    else if (state.mode === "ajji") openAjji();
+    else show("s-home");
+  });
   $("btn-home").addEventListener("click", () => show("s-home"));
 
+  // mission
+  $("mw-p1").addEventListener("click", () => { sndTap(); openMission(0); });
+  $("mw-p2").addEventListener("click", () => { sndTap(); openMission(1); });
+  $("btn-mission-hear").addEventListener("click", () => playOr(state.mission.id, missionSrc(state.mission)));
+  $("btn-mission-slow").addEventListener("click", () => play(missionSrc(state.mission, true)));
+  $("btn-mission-rec").addEventListener("click", missionPractice);
+  $("btn-mission-done").addEventListener("click", missionVerify);
+
+  // echo
+  document.querySelectorAll(".lvl-card").forEach((el) =>
+    el.addEventListener("click", () => { sndTap(); startEcho(+el.dataset.lvl); }));
+  $("btn-echo-hear").addEventListener("click", () => {
+    const e = state.eQueue[state.eIdx];
+    playOr(e.id, echoSrc(e));
+  });
+  $("btn-echo-slow").addEventListener("click", () => play(echoSrc(state.eQueue[state.eIdx], true)));
+  $("btn-echo-rec").addEventListener("click", echoRecord);
+  document.querySelectorAll("#echo-rate [data-rate]").forEach((el) =>
+    el.addEventListener("click", () => { sndTap(); echoRate(el.dataset.rate); }));
+
+  // story
+  $("btn-story-hear").addEventListener("click", () => play(storySrc(STORY.parts[state.sIdx].id)));
+  $("btn-story-next").addEventListener("click", () => { sndTap(); state.sIdx++; storyPart(); });
+
   initNames();
+  VDB.open();
 })();
