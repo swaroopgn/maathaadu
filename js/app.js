@@ -9,7 +9,8 @@
     complete: $("screen-complete"),
   };
 
-  const RING_COLORS = ["#ff6b6b", "#ffc93c", "#3fc978", "#4cc9f0", "#ff7eb6", "#9b5de5"];
+  const RING_COLORS = (document.body.dataset.ringColors ||
+    "#ff6b6b,#ffc93c,#3fc978,#4cc9f0,#ff7eb6,#9b5de5").split(",");
   const store = {
     get player() { return localStorage.getItem("mt.player") || "anna"; },
     set player(v) { localStorage.setItem("mt.player", v); },

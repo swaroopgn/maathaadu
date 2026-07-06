@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maathaadu! — design options</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: #14151c; color: #f0f0f5; padding: 32px 20px 60px; }
+  h1 { text-align: center; font-size: 1.6rem; margin-bottom: 4px; }
+  p.sub { text-align: center; color: #9aa; margin-bottom: 30px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 26px; max-width: 1400px; margin: 0 auto; }
+  .opt { background: #1e2029; border-radius: 16px; overflow: hidden; border: 1px solid #2c2f3d; }
+  .opt h2 { font-size: 1.05rem; padding: 14px 16px 4px; }
+  .opt p { font-size: .85rem; color: #9aa; padding: 0 16px 12px; min-height: 3em; }
+  .frame { position: relative; width: 100%; aspect-ratio: 4/3.4; overflow: hidden; background: #000; }
+  .frame iframe {
+    width: 200%; height: 200%;
+    transform: scale(.5); transform-origin: 0 0;
+    border: 0; pointer-events: none;
+  }
+  .frame a { position: absolute; inset: 0; }
+  .opt .open { display: block; text-align: center; padding: 13px; background: #2c2f3d; color: #fff; text-decoration: none; font-weight: 600; font-size: .95rem; }
+  .opt .open:hover { background: #3a3e52; }
+</style>
+</head>
+<body>
+  <h1>ಮಾತಾಡು! — pick a look</h1>
+  <p class="sub">Tap a preview to try it for real (audio, lessons — everything works in each).</p>
+  <div class="grid">
+    <div class="opt">
+      <h2>1 · Neon Arcade</h2>
+      <p>Dark e-sports HUD: glowing neon edges on deep space, scanline grid. The "gamer" one.</p>
+      <div class="frame"><iframe src="arcade.html" loading="lazy" tabindex="-1"></iframe><a href="arcade.html" aria-label="Open Neon Arcade"></a></div>
+      <a class="open" href="arcade.html">Open Neon Arcade →</a>
+    </div>
+    <div class="opt">
+      <h2>2 · Pixel Quest</h2>
+      <p>Retro-console world: hard edges, block shadows, pixel parrot, grass floor. The "Minecraft" one.</p>
+      <div class="frame"><iframe src="pixel.html" loading="lazy" tabindex="-1"></iframe><a href="pixel.html" aria-label="Open Pixel Quest"></a></div>
+      <a class="open" href="pixel.html">Open Pixel Quest →</a>
+    </div>
+    <div class="opt">
+      <h2>3 · Comic Pop</h2>
+      <p>Superhero comic book: thick ink outlines, halftone dots, speech-bubble reveals, everything tilted.</p>
+      <div class="frame"><iframe src="comic.html" loading="lazy" tabindex="-1"></iframe><a href="comic.html" aria-label="Open Comic Pop"></a></div>
+      <a class="open" href="comic.html">Open Comic Pop →</a>
+    </div>
+    <div class="opt">
+      <h2>4 · Aurora Glass</h2>
+      <p>Premium modern app: frosted-glass panels over a slow twilight aurora. Calm, cool, iridescent.</p>
+      <div class="frame"><iframe src="glass.html" loading="lazy" tabindex="-1"></iframe><a href="glass.html" aria-label="Open Aurora Glass"></a></div>
+      <a class="open" href="glass.html">Open Aurora Glass →</a>
+    </div>
+    <div class="opt">
+      <h2>5 · Candy Pop (current live)</h2>
+      <p>What's on the site now — flat bright, squishy clay buttons, kawaii parrot.</p>
+      <div class="frame"><iframe src="index.html" loading="lazy" tabindex="-1"></iframe><a href="index.html" aria-label="Open Candy Pop"></a></div>
+      <a class="open" href="index.html">Open Candy Pop →</a>
+    </div>
+  </div>
+</body>
+</html>

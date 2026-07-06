@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#8fd3ff">
+<title>ಮಾತಾಡು! · PIXEL QUEST</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='44' fill='%2358cc7a'/%3E%3Ccircle cx='38' cy='44' r='13' fill='%23fff'/%3E%3Ccircle cx='41' cy='46' r='6' fill='%232e2a5e'/%3E%3Ccircle cx='62' cy='44' r='13' fill='%23fff'/%3E%3Ccircle cx='59' cy='46' r='6' fill='%232e2a5e'/%3E%3Cpath d='M42 62 C42 57 58 57 58 62 C58 70 52 75 50 75 C48 75 42 70 42 62Z' fill='%23ffa62b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500;700;800&family=Nunito:wght@600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/theme-pixel.css?v=1">
+</head>
+<body data-ring-colors="#52b84e,#e5484d,#f5b301,#3aa0e8,#9d5ce5">
+
+<!-- ======================= HOME ======================= -->
+<section id="screen-home" class="screen active">
+  <div class="wrap">
+    <header class="masthead">
+      <span class="float-emoji fe1">🦜</span>
+      <span class="float-emoji fe2">✨</span>
+      <span class="float-emoji fe3">🥭</span>
+      <h1 class="kn-title">ಮಾತಾಡು!</h1>
+      <div class="en-title">MAATHAADU!</div>
+      <p class="tagline">Listen to the parrot 🦜 and answer in Kannada</p>
+    </header>
+
+    <div class="players" id="players">
+      <button class="player" data-player="anna" aria-label="Play as Anna, listen and type">
+        <span class="avatar">😎</span>
+        <span class="pname">ಅಣ್ಣ Anna</span>
+        <span class="pmode">listen &amp; type ⌨️</span>
+      </button>
+      <button class="player" data-player="putta" aria-label="Play as Putta, listen and tap">
+        <span class="avatar">🦖</span>
+        <span class="pname">ಪುಟ್ಟ Putta</span>
+        <span class="pmode">listen &amp; tap 👆</span>
+      </button>
+    </div>
+
+    <h2 class="shelf-title">CHOOSE YOUR QUEST</h2>
+    <div class="lessons" id="lessons"></div>
+
+    <footer class="home-foot">
+      <a class="parents-link" href="parents.html">👨‍👩‍👦‍👦 ಪೋಷಕರಿಗೆ · for parents — how kids learn a home language</a>
+    </footer>
+  </div>
+</section>
+
+<!-- ======================= LESSON ======================= -->
+<section id="screen-lesson" class="screen">
+  <div class="wrap">
+    <div class="lesson-top">
+      <button class="backbtn" id="btn-back" aria-label="Back to shelf">←</button>
+      <div class="lesson-name" id="lesson-name"></div>
+      <button class="mode-toggle" id="btn-mode" aria-label="Switch answer mode">⌨️</button>
+    </div>
+
+    <div class="progress-wrap" aria-hidden="true">
+      <div class="progress" id="progress"></div>
+      <div class="pcount" id="pcount"></div>
+    </div>
+
+    <div class="stage">
+      <button class="parrot-btn" id="btn-parrot" aria-label="Play the Kannada word">
+        <svg viewBox="0 0 200 200" aria-hidden="true" shape-rendering="crispEdges">
+          <rect x="79" y="2" width="14" height="14" fill="#e5484d"/>
+          <rect x="93" y="2" width="14" height="14" fill="#e5484d"/>
+          <rect x="107" y="2" width="14" height="14" fill="#e5484d"/>
+          <rect x="65" y="16" width="14" height="14" fill="#e5484d"/>
+          <rect x="79" y="16" width="14" height="14" fill="#e5484d"/>
+          <rect x="93" y="16" width="14" height="14" fill="#e5484d"/>
+          <rect x="107" y="16" width="14" height="14" fill="#e5484d"/>
+          <rect x="121" y="16" width="14" height="14" fill="#e5484d"/>
+          <rect x="51" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="93" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="121" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="135" y="30" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="93" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="121" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="135" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="149" y="44" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="58" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="58" width="14" height="14" fill="#ffffff"/>
+          <rect x="65" y="58" width="14" height="14" fill="#ffffff"/>
+          <rect x="79" y="58" width="14" height="14" fill="#1b2432"/>
+          <rect x="93" y="58" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="58" width="14" height="14" fill="#ffffff"/>
+          <rect x="121" y="58" width="14" height="14" fill="#ffffff"/>
+          <rect x="135" y="58" width="14" height="14" fill="#1b2432"/>
+          <rect x="149" y="58" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="72" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="72" width="14" height="14" fill="#ffffff"/>
+          <rect x="65" y="72" width="14" height="14" fill="#ffffff"/>
+          <rect x="79" y="72" width="14" height="14" fill="#1b2432"/>
+          <rect x="93" y="72" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="72" width="14" height="14" fill="#ffffff"/>
+          <rect x="121" y="72" width="14" height="14" fill="#ffffff"/>
+          <rect x="135" y="72" width="14" height="14" fill="#1b2432"/>
+          <rect x="149" y="72" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="86" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="86" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="86" width="14" height="14" fill="#ff9ecb"/>
+          <rect x="79" y="86" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="93" y="86" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="107" y="86" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="121" y="86" width="14" height="14" fill="#ff9ecb"/>
+          <rect x="135" y="86" width="14" height="14" fill="#52b84e"/>
+          <rect x="149" y="86" width="14" height="14" fill="#52b84e"/>
+          <rect x="9" y="100" width="14" height="14" fill="#3aa0e8"/>
+          <rect x="23" y="100" width="14" height="14" fill="#3aa0e8"/>
+          <rect x="37" y="100" width="14" height="14" fill="#2e8b2b"/>
+          <rect x="51" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="93" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="100" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="121" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="135" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="149" y="100" width="14" height="14" fill="#52b84e"/>
+          <rect x="9" y="114" width="14" height="14" fill="#3aa0e8"/>
+          <rect x="23" y="114" width="14" height="14" fill="#3aa0e8"/>
+          <rect x="37" y="114" width="14" height="14" fill="#2e8b2b"/>
+          <rect x="51" y="114" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="114" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="114" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="93" y="114" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="107" y="114" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="121" y="114" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="135" y="114" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="149" y="114" width="14" height="14" fill="#52b84e"/>
+          <rect x="163" y="114" width="14" height="14" fill="#52b84e"/>
+          <rect x="23" y="128" width="14" height="14" fill="#3aa0e8"/>
+          <rect x="37" y="128" width="14" height="14" fill="#2e8b2b"/>
+          <rect x="51" y="128" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="128" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="128" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="93" y="128" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="107" y="128" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="121" y="128" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="135" y="128" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="149" y="128" width="14" height="14" fill="#52b84e"/>
+          <rect x="163" y="128" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="142" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="93" y="142" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="107" y="142" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="121" y="142" width="14" height="14" fill="#c9f2d0"/>
+          <rect x="135" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="149" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="163" y="142" width="14" height="14" fill="#52b84e"/>
+          <rect x="37" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="93" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="121" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="135" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="149" y="156" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="65" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="79" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="93" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="107" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="121" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="135" y="170" width="14" height="14" fill="#52b84e"/>
+          <rect x="51" y="184" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="65" y="184" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="121" y="184" width="14" height="14" fill="#ff9d1f"/>
+          <rect x="135" y="184" width="14" height="14" fill="#ff9d1f"/>
+        </svg>
+      </button>
+      <div class="hint-listen" id="listen-hint">tap the parrot to hear it 🔊</div>
+      <div class="audio-row">
+        <button class="toybtn turq small" id="btn-again">🔊 again</button>
+        <button class="toybtn ivory small" id="btn-slow">🐢 slow</button>
+        <button class="toybtn yellow small" id="btn-hint">💡 hint</button>
+      </div>
+    </div>
+
+    <div class="answer-area" id="answer-area">
+      <div class="type-row" id="type-row">
+        <input class="answer-input" id="answer-input" type="text"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="type what you hear…" aria-label="Type the Kannada word in English letters">
+        <button class="toybtn green" id="btn-check">Check ✓</button>
+      </div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback" role="status"></div>
+      <div id="reveal-slot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= COMPLETE ======================= -->
+<section id="screen-complete" class="screen">
+  <div class="wrap complete-stage">
+    <div class="done-burst">🦜🎉</div>
+    <h2 id="done-title">ಭೇಷ್! Bhesh!</h2>
+    <div class="done-sub" id="done-sub"></div>
+    <div class="done-stars" id="done-stars"></div>
+    <div class="complete-actions">
+      <button class="toybtn turq" id="btn-replay">🔁 play again</button>
+      <button class="toybtn yellow" id="btn-home">🏠 toy shelf</button>
+    </div>
+  </div>
+</section>
+
+<div class="confetti" id="confetti"></div>
+
+<script src="js/lessons.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+</body>
+</html>
