@@ -154,6 +154,58 @@ button { font-family: inherit; color: inherit; border: none; background: none; c
 .home-foot a { color: var(--ink-soft); font-size: .98rem; text-decoration: underline wavy rgba(58,52,43,.4) 1.5px; text-underline-offset: 5px; }
 
 /* --------------------------------------------------------------------------
+   How-to comic & player names
+   -------------------------------------------------------------------------- */
+
+.howto-box {
+  width: min(560px, 92vw);
+  padding: 14px 10px 6px;
+  transform: rotate(-.6deg);
+}
+.scene { width: 100%; height: auto; aspect-ratio: 280 / 170; }
+.howto-cap {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  max-width: 460px;
+  min-height: 3.2em;
+}
+.howto-dots { display: flex; gap: 10px; }
+.howto-dots i {
+  width: 14px; height: 14px;
+  border: 2.5px solid var(--ink);
+  border-radius: 45% 55% 50% 50% / 55% 45% 55% 45%;
+  background: transparent;
+}
+.howto-dots i.on { background: var(--mustard); }
+
+.players-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 26px 20px;
+  transform: rotate(-1deg);
+}
+.player-card:last-child { transform: rotate(1deg); border-radius: var(--wob-b); }
+.player-card .pav { width: 96px; height: 96px; }
+.name-input {
+  width: 150px;
+  border: none;
+  border-bottom: 3px dashed var(--ink);
+  background: transparent;
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  text-align: center;
+  color: var(--ink);
+  outline: none;
+  padding: 2px 4px;
+}
+.name-input:focus { border-bottom-color: var(--tomato); }
+.name-input::placeholder { color: var(--ink-soft); opacity: .7; }
+.players-row .vs { font-family: var(--hand); font-size: 2rem; color: var(--tomato); transform: rotate(-4deg); }
+
+/* --------------------------------------------------------------------------
    Pass screen
    -------------------------------------------------------------------------- */
 
