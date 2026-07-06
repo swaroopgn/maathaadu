@@ -3,7 +3,8 @@
 A listening-and-speaking Kannada game for kids who *hear* Kannada at home but
 don't speak it much yet. Built for iPads.
 
-**Live**: https://swaroopgn.github.io/maathaadu/
+**Live**: https://maathaadu.onrender.com (Render static site, auto-deploys on
+push to `main`; also mirrored at https://swaroopgn.github.io/maathaadu/)
 
 ## How it plays
 
@@ -21,10 +22,10 @@ don't speak it much yet. Built for iPads.
 
 ## Design
 
-Visual world: **Channapatna toys** — Karnataka's lacquered wooden toys.
-Vermilion, marigold, leaf green, lac pink and turquoise on turned ivory wood,
-set on a deep teal toy-shop backdrop. Type is Baloo Tamma 2 (the Kannada
-member of the Baloo family) + Nunito.
+Candy-pop: flat, bright and squishy — airy warm background with drifting
+pastel blobs, claymorphic buttons with springy squish animations, a kawaii
+parrot mascot, and a popping segment progress bar. Type is Baloo Tamma 2
+(the Kannada member of the Baloo family) + Nunito.
 
 ## Adding lessons
 
