@@ -1,0 +1,287 @@
+/* ==========================================================================
+   ಹೇಳು-ಕೇಳು (Helu-Kelu) — SKETCHBOOK design
+   Everything looks drawn by hand with a marker on warm paper: wobbly ink
+   borders, crayon fills, handwriting type. No emojis — only drawn art.
+   ========================================================================== */
+
+:root {
+  --paper:   #faf3e6;
+  --card:    #fffdf6;
+  --ink:     #3a342b;
+  --ink-soft:#8a8172;
+  --tomato:  #d95d45;
+  --mustard: #e0a32e;
+  --sage:    #7fa869;
+  --blue:    #6f9bce;
+  --plum:    #9a6b9e;
+
+  --hand: "Akaya Kanadaka", "Kalam", cursive;
+  --body: "Kalam", "Akaya Kanadaka", cursive;
+
+  /* three wobbly border shapes to alternate between */
+  --wob-a: 255px 18px 225px 20px / 20px 225px 18px 255px;
+  --wob-b: 18px 240px 22px 220px / 230px 20px 250px 18px;
+  --wob-c: 220px 24px 240px 18px / 18px 250px 22px 230px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { height: 100%; }
+
+body {
+  min-height: 100%;
+  font-family: var(--body);
+  color: var(--ink);
+  background:
+    radial-gradient(1.2px 1.2px at 22% 34%, rgba(58,52,43,.16), transparent 100%),
+    radial-gradient(1.4px 1.4px at 68% 12%, rgba(58,52,43,.13), transparent 100%),
+    radial-gradient(1.1px 1.1px at 84% 62%, rgba(58,52,43,.15), transparent 100%),
+    radial-gradient(1.3px 1.3px at 41% 80%, rgba(58,52,43,.12), transparent 100%),
+    var(--paper);
+  background-size: 340px 340px, 420px 420px, 380px 380px, 300px 300px, auto;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; color: inherit; border: none; background: none; cursor: pointer; -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+
+.screen { display: none; min-height: 100dvh; }
+.screen.active { display: flex; }
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 26px 22px 50px;
+  width: 100%;
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Hand-drawn building blocks
+   -------------------------------------------------------------------------- */
+
+.sketchbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px 26px;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: var(--wob-a);
+  box-shadow: 3px 4px 0 var(--ink);
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.sketchbtn:nth-of-type(even) { border-radius: var(--wob-b); }
+.sketchbtn:active { transform: translate(3px, 4px); box-shadow: 0 0 0 var(--ink); }
+.sketchbtn.big { min-height: 68px; font-size: 1.6rem; padding: 12px 38px; }
+.sketchbtn.small { min-height: 50px; font-size: 1.05rem; padding: 8px 20px; box-shadow: 2px 3px 0 var(--ink); }
+.sketchbtn.primary { background: var(--mustard); }
+
+.framed {
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: var(--wob-c);
+  box-shadow: 4px 5px 0 var(--ink);
+}
+
+.inline-ic { width: 28px; height: 28px; flex: none; }
+
+.doodle { position: fixed; opacity: .5; pointer-events: none; z-index: -1; }
+.doodle svg { width: 34px; height: 34px; }
+.doodle.d1 { top: 7%; left: 8%; transform: rotate(-14deg); }
+.doodle.d2 { bottom: 9%; right: 7%; transform: rotate(12deg) scale(1.3); }
+
+/* --------------------------------------------------------------------------
+   Home
+   -------------------------------------------------------------------------- */
+
+.mascot svg { width: min(170px, 40vw); height: min(170px, 40vw); }
+.mascot { animation: sway 3.4s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-2deg); } to { transform: rotate(2.5deg); } }
+.small-mascot svg { width: 120px; height: 120px; }
+
+.title {
+  font-family: var(--hand);
+  font-size: clamp(3.2rem, 12vw, 5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  transform: rotate(-1.5deg);
+  text-shadow: 3px 3px 0 rgba(224,163,46,.55);
+}
+.subtitle {
+  font-family: var(--hand);
+  font-size: 1.35rem;
+  color: var(--tomato);
+  transform: rotate(-.6deg);
+}
+.tagline { font-size: 1.08rem; line-height: 1.55; color: var(--ink-soft); max-width: 430px; }
+
+.pick-label {
+  font-family: var(--hand);
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-top: 14px;
+  transform: rotate(-1deg);
+}
+.pick-label::after { content: ""; display: block; width: 150px; height: 3px; background: var(--ink); border-radius: 40% 60% 50% 50%; margin: 2px auto 0; opacity: .6; }
+
+.cat-row { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; }
+.cat-card {
+  flex-direction: column;
+  gap: 2px;
+  padding: 18px 30px 14px;
+  transform: rotate(-1.4deg);
+}
+.cat-card:last-child { transform: rotate(1.4deg); border-radius: var(--wob-b); }
+.cat-art { width: 108px; height: 108px; }
+.cat-kn { font-family: var(--hand); font-size: 1.7rem; }
+.cat-en { font-size: .95rem; color: var(--ink-soft); }
+
+.home-foot { margin-top: 26px; }
+.home-foot a { color: var(--ink-soft); font-size: .98rem; text-decoration: underline wavy rgba(58,52,43,.4) 1.5px; text-underline-offset: 5px; }
+
+/* --------------------------------------------------------------------------
+   Pass screen
+   -------------------------------------------------------------------------- */
+
+.pass-avatar svg { width: 130px; height: 130px; }
+.pass-title {
+  font-family: var(--hand);
+  font-size: clamp(1.9rem, 7vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.25;
+  transform: rotate(-1deg);
+  max-width: 520px;
+}
+.pass-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  font-size: 1.15rem;
+  max-width: 460px;
+  transform: rotate(.8deg);
+}
+.pass-note .inline-ic { width: 40px; height: 40px; }
+
+.score-line { font-family: var(--hand); font-size: 1.2rem; color: var(--ink-soft); margin-top: 8px; }
+
+/* --------------------------------------------------------------------------
+   Speak screen
+   -------------------------------------------------------------------------- */
+
+.step-title {
+  font-family: var(--hand);
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-weight: 400;
+  transform: rotate(-.8deg);
+  line-height: 1.3;
+}
+
+.secret-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 22px 44px 16px;
+  transform: rotate(-1deg);
+  animation: cardIn .35s ease both;
+}
+@keyframes cardIn { from { transform: rotate(-1deg) scale(.85); opacity: 0; } }
+.secret-art { width: min(170px, 42vw); height: min(170px, 42vw); }
+.secret-kn { font-family: var(--hand); font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1.2; }
+.secret-tr { font-size: 1.2rem; color: var(--tomato); }
+.small-card { padding: 14px 36px 12px; }
+.small-card .secret-art { width: 120px; height: 120px; }
+.small-card .secret-kn { font-size: 2.1rem; }
+
+.coach { font-size: 1.05rem; color: var(--ink-soft); line-height: 1.5; }
+
+/* --------------------------------------------------------------------------
+   Guess screen
+   -------------------------------------------------------------------------- */
+
+.guess-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(110px, 180px));
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+}
+@media (max-width: 560px) { .guess-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.guess-card {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: var(--card);
+  border: 3px solid var(--ink);
+  border-radius: var(--wob-a);
+  box-shadow: 3px 4px 0 var(--ink);
+  transition: transform .12s ease, box-shadow .12s ease, background .15s ease;
+}
+.guess-card:nth-child(3n) { border-radius: var(--wob-b); transform: rotate(.9deg); }
+.guess-card:nth-child(3n+1) { transform: rotate(-.9deg); }
+.guess-card:nth-child(4n) { border-radius: var(--wob-c); }
+.guess-card svg { width: 82%; height: 82%; }
+.guess-card:active { transform: translate(3px,4px); box-shadow: 0 0 0 var(--ink); }
+.guess-card.correct { background: #e3edd7; animation: happy .5s ease; }
+@keyframes happy { 30% { transform: scale(1.08) rotate(2deg); } 60% { transform: scale(.98) rotate(-1deg); } }
+.guess-card.wrong { background: #f4ddd6; animation: nope .4s ease; }
+@keyframes nope { 25%,75% { transform: translateX(-7px); } 50%,100% { transform: translateX(7px); } }
+
+/* --------------------------------------------------------------------------
+   Result & final
+   -------------------------------------------------------------------------- */
+
+.result-mark svg { width: 90px; height: 90px; }
+.result-mark { animation: markIn .45s cubic-bezier(.3,1.6,.4,1) both; }
+@keyframes markIn { from { transform: scale(0) rotate(-20deg); } }
+
+.result-title {
+  font-family: var(--hand);
+  font-size: clamp(1.9rem, 7vw, 2.5rem);
+  font-weight: 400;
+  transform: rotate(-1deg);
+}
+.result-title.miss { color: var(--tomato); }
+
+.final-title {
+  font-family: var(--hand);
+  font-size: clamp(2.2rem, 8vw, 3rem);
+  font-weight: 400;
+  transform: rotate(-1.2deg);
+}
+.final-stars { display: flex; gap: 10px; }
+.final-stars svg { width: 64px; height: 64px; }
+.final-stars svg:nth-child(2) { transform: rotate(8deg) translateY(-6px); }
+.final-stars svg:nth-child(3) { transform: rotate(-6deg); }
+.final-sub { font-size: 1.15rem; color: var(--ink-soft); max-width: 440px; line-height: 1.5; }
+.final-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+/* --------------------------------------------------------------------------
+   A11y & motion
+   -------------------------------------------------------------------------- */
+
+:focus-visible { outline: 3px dashed var(--blue); outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

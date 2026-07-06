@@ -4,138 +4,418 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#fdf8f0">
-<title>ಮಾತಾಡು! Maathaadu! — speak Kannada</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='44' fill='%2358cc7a'/%3E%3Ccircle cx='38' cy='44' r='13' fill='%23fff'/%3E%3Ccircle cx='41' cy='46' r='6' fill='%232e2a5e'/%3E%3Ccircle cx='62' cy='44' r='13' fill='%23fff'/%3E%3Ccircle cx='59' cy='46' r='6' fill='%232e2a5e'/%3E%3Cpath d='M42 62 C42 57 58 57 58 62 C58 70 52 75 50 75 C48 75 42 70 42 62Z' fill='%23ffa62b'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#faf3e6">
+<title>ಹೇಳು-ಕೇಳು · Helu-Kelu — the Kannada game for two</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23faf3e6'/%3E%3Cpath d='M28 62 Q24 34 50 32 Q78 30 74 56 Q72 76 50 76 Q46 76 42 74 L30 84 Z' fill='none' stroke='%233a342b' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+Tamma+2:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=3">
+<link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/barrier.css?v=1">
 </head>
 <body>
 
-<!-- ======================= HOME ======================= -->
-<section id="screen-home" class="screen active">
-  <div class="wrap">
-    <header class="masthead">
-      <span class="float-emoji fe1">🦜</span>
-      <span class="float-emoji fe2">✨</span>
-      <span class="float-emoji fe3">🥭</span>
-      <h1 class="kn-title">ಮಾತಾಡು!</h1>
-      <div class="en-title">maathaadu! · speak!</div>
-      <p class="tagline">Listen to the parrot 🦜 and answer in Kannada</p>
-    </header>
+<!-- ======================= hand-drawn art sprite ======================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="rough" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/>
+    </filter>
+    <filter id="rougher" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4"/>
+    </filter>
+  </defs>
 
-    <div class="players" id="players">
-      <button class="player" data-player="anna" aria-label="Play as Anna, listen and type">
-        <span class="avatar">😎</span>
-        <span class="pname">ಅಣ್ಣ Anna</span>
-        <span class="pmode">listen &amp; type ⌨️</span>
+  <!-- ============ animals ============ -->
+  <symbol id="pic-naayi" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 70 Q34 98 46 102 L76 102 Q88 98 81 70" fill="#fffdf6"/>
+      <path d="M44 78 L78 78 L77 88 L45 88 Z" fill="#d95d45" stroke-width="3.5"/>
+      <ellipse cx="60" cy="48" rx="26" ry="24" fill="#fffdf6"/>
+      <path d="M38 30 Q24 42 32 62 Q42 58 45 38 Z" fill="#b5764a"/>
+      <path d="M82 30 Q96 42 88 62 Q78 58 75 38 Z" fill="#b5764a"/>
+      <ellipse cx="71" cy="44" rx="9" ry="10" fill="#b5764a" stroke="none" opacity=".85"/>
+      <circle cx="51" cy="45" r="2.6" fill="#3a342b" stroke="none"/>
+      <circle cx="71" cy="45" r="2.6" fill="#3a342b" stroke="none"/>
+      <ellipse cx="60" cy="55" rx="4.5" ry="3.5" fill="#3a342b" stroke="none"/>
+      <path d="M60 58 Q60 64 53 64 M60 58 Q60 64 67 64" fill="none"/>
+      <ellipse cx="50" cy="101" rx="7" ry="4" fill="#fffdf6"/>
+      <ellipse cx="72" cy="101" rx="7" ry="4" fill="#fffdf6"/>
+      <path d="M84 88 Q98 84 96 72" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-bekku" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M42 72 Q34 100 48 103 L74 103 Q88 100 80 72" fill="#e8c98f"/>
+      <ellipse cx="60" cy="50" rx="25" ry="22" fill="#e8c98f"/>
+      <path d="M38 38 L34 18 L52 30 Z" fill="#e8c98f"/>
+      <path d="M82 38 L86 18 L68 30 Z" fill="#e8c98f"/>
+      <path d="M40 21 L44 28 M80 21 L76 28" stroke="#d95d45" stroke-width="3" fill="none"/>
+      <circle cx="50" cy="48" r="2.5" fill="#3a342b" stroke="none"/>
+      <circle cx="70" cy="48" r="2.5" fill="#3a342b" stroke="none"/>
+      <path d="M57 56 L63 56 L60 60 Z" fill="#d95d45" stroke-width="3"/>
+      <path d="M60 60 Q60 65 53 65 M60 60 Q60 65 67 65" fill="none"/>
+      <path d="M30 52 L14 48 M30 58 L15 60 M90 52 L106 48 M90 58 L105 60" fill="none" stroke-width="3"/>
+      <path d="M82 96 Q104 96 100 76" fill="none"/>
+      <path d="M46 88 L74 88" stroke-width="3" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-aane" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="66" cy="66" rx="34" ry="27" fill="#9db3c9"/>
+      <circle cx="33" cy="52" r="18" fill="#9db3c9"/>
+      <path d="M30 64 Q22 78 28 92 Q34 98 38 92 Q34 80 40 70" fill="#9db3c9"/>
+      <path d="M44 40 Q58 30 60 48 Q58 62 46 62" fill="#7f97ad"/>
+      <circle cx="28" cy="48" r="2.5" fill="#3a342b" stroke="none"/>
+      <path d="M52 93 L52 102 M68 93 L68 102 M84 90 L84 100" fill="none"/>
+      <path d="M98 62 Q106 66 102 74" fill="none" stroke-width="3"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-huli" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="60" cy="58" rx="30" ry="27" fill="#e69a3c"/>
+      <path d="M38 38 L34 22 L50 30 Z" fill="#e69a3c"/>
+      <path d="M82 38 L86 22 L70 30 Z" fill="#e69a3c"/>
+      <ellipse cx="60" cy="70" rx="14" ry="11" fill="#fffdf6"/>
+      <circle cx="49" cy="52" r="2.7" fill="#3a342b" stroke="none"/>
+      <circle cx="71" cy="52" r="2.7" fill="#3a342b" stroke="none"/>
+      <path d="M56 66 L64 66 L60 71 Z" fill="#3a342b" stroke-width="3"/>
+      <path d="M60 71 Q60 77 52 77 M60 71 Q60 77 68 77" fill="none" stroke-width="3"/>
+      <path d="M33 44 L40 48 M32 58 L40 58 M86 44 L80 48 M88 58 L80 58" stroke-width="4" fill="none"/>
+      <path d="M52 34 L54 42 M68 34 L66 42" stroke-width="4" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-hasu" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 26 Q34 12 44 12 M80 26 Q86 12 76 12" fill="none"/>
+      <ellipse cx="60" cy="52" rx="27" ry="24" fill="#fffdf6"/>
+      <path d="M33 44 Q18 40 20 52 Q28 58 36 54" fill="#e8c98f"/>
+      <path d="M87 44 Q102 40 100 52 Q92 58 84 54" fill="#e8c98f"/>
+      <ellipse cx="60" cy="66" rx="16" ry="12" fill="#e9b8c2"/>
+      <circle cx="54" cy="66" r="2.4" fill="#3a342b" stroke="none"/>
+      <circle cx="66" cy="66" r="2.4" fill="#3a342b" stroke="none"/>
+      <circle cx="50" cy="46" r="2.6" fill="#3a342b" stroke="none"/>
+      <circle cx="70" cy="46" r="2.6" fill="#3a342b" stroke="none"/>
+      <path d="M42 34 Q50 28 56 33 Q50 40 42 34 Z" fill="#3a342b" stroke="none" opacity=".85"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-kudure" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M44 100 L46 62 Q46 40 60 34 Q76 28 82 40 L88 52 Q90 60 80 60 L72 58 Q66 76 68 100" fill="#b5764a"/>
+      <path d="M54 34 Q50 22 58 18 L62 30" fill="#b5764a"/>
+      <path d="M64 32 Q66 20 74 22 L70 34" fill="#b5764a"/>
+      <path d="M46 62 Q36 60 38 46 Q40 34 50 30 Q44 40 48 46 Q42 52 46 62 Z" fill="#3a342b" stroke="none" opacity=".9"/>
+      <circle cx="72" cy="44" r="2.6" fill="#3a342b" stroke="none"/>
+      <ellipse cx="84" cy="52" rx="2.8" ry="2.2" fill="#3a342b" stroke="none"/>
+      <path d="M88 56 Q84 60 78 58" fill="none" stroke-width="3"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-meenu" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 60 Q42 36 70 40 Q92 46 94 60 Q92 74 70 80 Q42 84 22 60 Z" fill="#6f9bce"/>
+      <path d="M94 60 L110 46 L106 60 L110 74 Z" fill="#6f9bce"/>
+      <path d="M56 42 Q64 52 56 62" fill="none" stroke-width="3"/>
+      <circle cx="36" cy="56" r="3" fill="#3a342b" stroke="none"/>
+      <path d="M60 66 Q66 70 72 66" fill="none" stroke-width="3"/>
+      <circle cx="24" cy="34" r="3.5" fill="none" stroke-width="3"/>
+      <circle cx="16" cy="24" r="2.5" fill="none" stroke-width="3"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-hakki" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 66 Q36 38 62 36 Q86 36 84 60 Q82 82 58 82 Q44 80 40 66 Z" fill="#7fa869"/>
+      <path d="M50 56 Q62 50 68 62 Q60 70 50 64 Z" fill="#5f8550" stroke-width="3"/>
+      <path d="M84 52 L98 48 L86 60 Z" fill="#e0a32e"/>
+      <circle cx="72" cy="48" r="2.7" fill="#3a342b" stroke="none"/>
+      <path d="M40 66 L26 74 L38 74 Z" fill="#7fa869"/>
+      <path d="M56 82 L54 96 M66 80 L66 96" fill="none" stroke-width="3"/>
+      <path d="M30 96 L92 98" fill="none"/>
+    </g>
+  </symbol>
+
+  <!-- ============ food ============ -->
+  <symbol id="pic-anna_rice" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M26 62 Q26 92 60 92 Q94 92 94 62 Z" fill="#6f9bce"/>
+      <path d="M32 62 Q34 44 60 44 Q86 44 88 62" fill="#fffdf6"/>
+      <path d="M46 52 L52 56 M62 48 L68 52 M74 56 L79 59 M52 60 L58 61" stroke-width="3" fill="none"/>
+      <path d="M48 34 Q52 26 48 18 M62 34 Q66 26 62 18 M76 34 Q80 26 76 18" fill="none" stroke-width="3" opacity=".7"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-haalu" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 26 L44 98 Q44 102 50 102 L70 102 Q76 102 76 98 L80 26 Z" fill="#fffdf6"/>
+      <path d="M43 44 Q52 40 60 44 Q68 48 77 44 L79 30 L41 30 Z" fill="#eef2f6"/>
+      <path d="M46 62 L74 62" stroke-width="3" opacity=".4" fill="none"/>
+      <path d="M64 26 L78 8" fill="none" stroke="#d95d45" stroke-width="5"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-neeru" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 14 Q76 38 76 50 Q76 66 60 66 Q44 66 44 50 Q44 38 60 14 Z" fill="#6f9bce"/>
+      <path d="M52 50 Q52 58 58 60" fill="none" stroke="#fffdf6" stroke-width="3.5"/>
+      <path d="M28 84 Q44 76 60 84 Q76 92 92 84" fill="none"/>
+      <path d="M28 96 Q44 88 60 96 Q76 104 92 96" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-hannu" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 38 Q34 30 30 58 Q28 86 52 94 Q60 97 68 94 Q92 86 90 58 Q86 30 60 38 Z" fill="#d95d45"/>
+      <path d="M60 38 Q58 26 62 20" fill="none"/>
+      <path d="M62 26 Q76 14 86 22 Q78 34 62 30 Z" fill="#7fa869"/>
+      <path d="M42 52 Q38 60 40 70" fill="none" stroke="#fffdf6" stroke-width="3.5"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-baalehannu" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M28 32 Q30 74 62 88 Q88 98 98 80 Q94 76 88 78 Q64 80 46 56 Q36 42 38 30 Q32 26 28 32 Z" fill="#e0a32e"/>
+      <path d="M36 30 L38 22 L44 24 L42 32" fill="#7fa869"/>
+      <path d="M96 82 L102 88" fill="none"/>
+      <path d="M44 46 Q56 68 76 78" fill="none" stroke-width="3" opacity=".5"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-dose" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="58" cy="80" rx="48" ry="15" fill="#c8d8c0"/>
+      <path d="M16 78 Q14 74 20 74 L88 74 Q72 40 62 34 Q58 32 54 36 Q28 58 16 78 Z" fill="#e0a32e"/>
+      <path d="M34 66 Q42 62 46 68 M52 56 Q60 52 64 58 M62 44 Q68 42 72 48" fill="none" stroke-width="3" opacity=".55"/>
+      <circle cx="96" cy="62" r="9" fill="#fffdf6"/>
+      <circle cx="96" cy="62" r="4" fill="#7fa869" stroke-width="3"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-mosaru" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M32 44 Q24 70 40 88 Q50 96 60 96 Q70 96 80 88 Q96 70 88 44 Z" fill="#c07a4a"/>
+      <path d="M32 44 Q40 36 60 36 Q80 36 88 44 Q80 52 60 52 Q40 52 32 44 Z" fill="#fffdf6"/>
+      <path d="M70 40 L84 16" fill="none" stroke-width="5"/>
+      <ellipse cx="86" cy="14" rx="7" ry="5" fill="#e8c98f"/>
+      <path d="M44 66 L76 66" stroke-width="3" opacity=".4" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="pic-sihi" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="60" cy="86" rx="40" ry="12" fill="#c8d8c0"/>
+      <circle cx="60" cy="54" r="28" fill="#e69a3c"/>
+      <circle cx="50" cy="46" r="2.4" fill="#b5764a" stroke="none"/>
+      <circle cx="64" cy="42" r="2.4" fill="#b5764a" stroke="none"/>
+      <circle cx="70" cy="56" r="2.4" fill="#b5764a" stroke="none"/>
+      <circle cx="55" cy="60" r="2.4" fill="#b5764a" stroke="none"/>
+      <circle cx="62" cy="68" r="2.4" fill="#b5764a" stroke="none"/>
+      <circle cx="44" cy="55" r="2.4" fill="#b5764a" stroke="none"/>
+      <path d="M52 30 Q56 24 62 28" fill="none" stroke-width="3" stroke="#7fa869"/>
+    </g>
+  </symbol>
+
+  <!-- ============ mascot & UI ============ -->
+  <symbol id="art-parrot" viewBox="0 0 160 160">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M66 34 Q44 40 42 68 Q40 96 58 108 Q50 122 54 134 Q60 138 66 130 Q70 120 70 112 Q92 116 102 98 Q112 78 100 56 Q90 36 66 34 Z" fill="#7fa869"/>
+      <path d="M100 56 Q116 52 120 62 Q116 72 100 68 Z" fill="#d95d45"/>
+      <path d="M100 66 Q112 68 112 76 Q106 80 98 74 Z" fill="#e0a32e"/>
+      <circle cx="86" cy="54" r="7" fill="#fffdf6"/>
+      <circle cx="88" cy="55" r="2.8" fill="#3a342b" stroke="none"/>
+      <path d="M60 60 Q74 66 70 84 Q64 96 52 92" fill="none" stroke-width="3.5"/>
+      <path d="M66 34 Q64 22 72 16 M74 34 Q76 24 84 22" fill="none" stroke-width="3.5"/>
+      <path d="M40 118 L96 120" fill="none" stroke-width="5"/>
+      <path d="M58 108 L58 118 M68 110 L68 119" fill="none" stroke-width="3.5"/>
+    </g>
+  </symbol>
+
+  <symbol id="av-anna" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="60" cy="62" r="34" fill="#fffdf6"/>
+      <path d="M30 52 Q34 26 60 26 Q86 26 90 52 Q76 44 66 46 Q46 50 30 52 Z" fill="#3a342b" stroke="none"/>
+      <path d="M34 30 L42 20 M50 26 L54 16 M68 24 L72 15" stroke-width="4" fill="none"/>
+      <circle cx="48" cy="60" r="2.7" fill="#3a342b" stroke="none"/>
+      <circle cx="72" cy="60" r="2.7" fill="#3a342b" stroke="none"/>
+      <path d="M50 76 Q60 84 70 76" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="av-putta" viewBox="0 0 120 120">
+    <g filter="url(#rough)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="60" cy="64" r="32" fill="#fffdf6"/>
+      <path d="M32 56 Q28 32 48 30 Q46 22 56 22 Q58 14 68 18 Q78 14 80 26 Q92 30 88 44 Q92 52 88 56 Q72 44 56 48 Q42 52 32 56 Z" fill="#3a342b" stroke="none"/>
+      <circle cx="49" cy="63" r="2.6" fill="#3a342b" stroke="none"/>
+      <circle cx="71" cy="63" r="2.6" fill="#3a342b" stroke="none"/>
+      <circle cx="42" cy="72" r="1.8" fill="#d95d45" stroke="none" opacity=".7"/>
+      <circle cx="78" cy="72" r="1.8" fill="#d95d45" stroke="none" opacity=".7"/>
+      <path d="M48 76 Q60 88 72 76" fill="none"/>
+      <path d="M56 80 L56 84 L62 84 L62 80" stroke-width="3" fill="#fffdf6"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-sound" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M12 24 L20 24 L32 12 L32 48 L20 36 L12 36 Z" fill="#e0a32e"/>
+      <path d="M40 22 Q46 30 40 38 M46 16 Q56 30 46 44"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-ear" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M22 22 Q22 8 34 8 Q48 8 46 24 Q44 34 36 40 Q30 44 30 52" />
+      <path d="M30 24 Q30 16 36 17"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-eyes" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M8 28 Q18 38 28 28 M32 28 Q42 38 52 28"/>
+      <path d="M14 36 L12 42 M24 38 L26 44 M38 38 L36 44 M48 36 L50 42" stroke-width="3"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-arrow" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M8 34 Q28 18 46 28"/>
+      <path d="M46 28 L34 26 M46 28 L40 38"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-star" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="3.5" stroke-linejoin="round">
+      <path d="M30 6 L37 22 L54 24 L41 36 L45 53 L30 44 L15 53 L19 36 L6 24 L23 22 Z" fill="#e0a32e"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-star-empty" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="3.5" stroke-linejoin="round" opacity=".35">
+      <path d="M30 6 L37 22 L54 24 L41 36 L45 53 L30 44 L15 53 L19 36 L6 24 L23 22 Z" fill="none"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-check" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#7fa869" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M12 32 L26 46 L50 14"/>
+    </g>
+  </symbol>
+
+  <symbol id="ic-swap" viewBox="0 0 60 60">
+    <g filter="url(#rougher)" stroke="#3a342b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M14 22 Q30 10 46 20 M46 20 L38 20 M46 20 L44 28"/>
+      <path d="M46 38 Q30 50 14 40 M14 40 L22 40 M14 40 L16 32"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- ======================= HOME ======================= -->
+<section id="s-home" class="screen active">
+  <div class="wrap center">
+    <div class="doodle d1"><svg><use href="#ic-star"/></svg></div>
+    <div class="doodle d2"><svg><use href="#ic-star"/></svg></div>
+
+    <div class="mascot"><svg><use href="#art-parrot"/></svg></div>
+    <h1 class="title">ಹೇಳು-ಕೇಳು</h1>
+    <div class="subtitle">helu–kelu · say it &amp; hear it</div>
+    <p class="tagline">A Kannada game for two brothers.<br>One says the secret word — the other finds it!</p>
+
+    <h2 class="pick-label">what shall we play with?</h2>
+    <div class="cat-row">
+      <button class="sketchbtn cat-card" data-cat="animals">
+        <svg class="cat-art"><use href="#pic-naayi"/></svg>
+        <span class="cat-kn">ಪ್ರಾಣಿಗಳು</span>
+        <span class="cat-en">animals</span>
       </button>
-      <button class="player" data-player="putta" aria-label="Play as Putta, listen and tap">
-        <span class="avatar">🦖</span>
-        <span class="pname">ಪುಟ್ಟ Putta</span>
-        <span class="pmode">listen &amp; tap 👆</span>
+      <button class="sketchbtn cat-card" data-cat="food">
+        <svg class="cat-art"><use href="#pic-dose"/></svg>
+        <span class="cat-kn">ತಿಂಡಿ ಊಟ</span>
+        <span class="cat-en">food</span>
       </button>
     </div>
 
-    <h2 class="shelf-title">PICK A GAME</h2>
-    <div class="lessons" id="lessons"></div>
-
     <footer class="home-foot">
-      <a class="parents-link" href="parents.html">👨‍👩‍👦‍👦 ಪೋಷಕರಿಗೆ · for parents — how kids learn a home language</a>
+      <a href="parents.html">for parents — how kids learn a home language</a>
     </footer>
   </div>
 </section>
 
-<!-- ======================= LESSON ======================= -->
-<section id="screen-lesson" class="screen">
-  <div class="wrap">
-    <div class="lesson-top">
-      <button class="backbtn" id="btn-back" aria-label="Back to shelf">←</button>
-      <div class="lesson-name" id="lesson-name"></div>
-      <button class="mode-toggle" id="btn-mode" aria-label="Switch answer mode">⌨️</button>
+<!-- ======================= PASS ======================= -->
+<section id="s-pass" class="screen">
+  <div class="wrap center">
+    <div class="pass-avatar"><svg id="pass-avatar-svg"><use href="#av-anna"/></svg></div>
+    <h2 class="pass-title" id="pass-title">Give the iPad to Anna</h2>
+    <div class="pass-note framed" id="pass-note">
+      <svg class="inline-ic"><use href="#ic-eyes"/></svg>
+      <span id="pass-note-text">Putta — look away and open your ears!</span>
     </div>
+    <button class="sketchbtn big primary" id="btn-pass-done">I've got it!</button>
+    <div class="score-line" id="pass-score"></div>
+  </div>
+</section>
 
-    <div class="progress-wrap" aria-hidden="true">
-      <div class="progress" id="progress"></div>
-      <div class="pcount" id="pcount"></div>
+<!-- ======================= SPEAK ======================= -->
+<section id="s-speak" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title" id="speak-title">Your secret word, Anna:</h2>
+    <div class="secret-card framed" id="secret-card">
+      <svg class="secret-art" id="secret-art"><use href="#pic-naayi"/></svg>
+      <div class="secret-kn" id="secret-kn">ನಾಯಿ</div>
+      <div class="secret-tr" id="secret-tr">naayi</div>
     </div>
+    <button class="sketchbtn small" id="btn-remind">
+      <svg class="inline-ic"><use href="#ic-ear"/></svg> remind me — hold close to your ear
+    </button>
+    <p class="coach">Say it in Kannada — loud and clear.<br>Big kids: try a whole sentence!</p>
+    <button class="sketchbtn big primary" id="btn-said">I said it out loud!</button>
+  </div>
+</section>
 
-    <div class="stage">
-      <button class="parrot-btn" id="btn-parrot" aria-label="Play the Kannada word">
-        <svg viewBox="0 0 200 200" aria-hidden="true">
-          <!-- kawaii parrot, flat candy style -->
-          <ellipse cx="100" cy="188" rx="46" ry="8" fill="rgba(46,42,94,.08)"/>
-          <!-- head tuft -->
-          <ellipse cx="78" cy="30" rx="9" ry="15" fill="#ff6b6b" transform="rotate(-24 78 30)"/>
-          <ellipse cx="97" cy="24" rx="9" ry="16" fill="#ffc93c"/>
-          <ellipse cx="116" cy="30" rx="9" ry="15" fill="#9b5de5" transform="rotate(24 116 30)"/>
-          <!-- tail -->
-          <ellipse cx="52" cy="150" rx="14" ry="34" fill="#4cc9f0" transform="rotate(28 52 150)"/>
-          <!-- body -->
-          <path d="M100 32 C 58 32 42 74 44 116 C 46 156 68 182 100 182 C 132 182 154 156 156 116 C 158 74 142 32 100 32 Z" fill="#58cc7a"/>
-          <!-- belly -->
-          <ellipse cx="100" cy="134" rx="38" ry="42" fill="#c9f2d0"/>
-          <!-- wing -->
-          <ellipse cx="60" cy="112" rx="17" ry="30" fill="#3fae62" transform="rotate(12 60 112)"/>
-          <!-- eyes: big kawaii -->
-          <circle cx="82" cy="76" r="15" fill="#fff"/>
-          <circle cx="85" cy="78" r="7.5" fill="#2e2a5e"/>
-          <circle cx="88" cy="75" r="2.6" fill="#fff"/>
-          <circle cx="126" cy="76" r="15" fill="#fff"/>
-          <circle cx="123" cy="78" r="7.5" fill="#2e2a5e"/>
-          <circle cx="126" cy="75" r="2.6" fill="#fff"/>
-          <!-- blush -->
-          <circle cx="68" cy="96" r="6" fill="#ffb0c8" opacity=".8"/>
-          <circle cx="140" cy="96" r="6" fill="#ffb0c8" opacity=".8"/>
-          <!-- beak -->
-          <path d="M92 90 C 92 84 116 84 116 90 C 116 100 108 108 104 108 C 100 108 92 100 92 90 Z" fill="#ffa62b"/>
-          <!-- feet -->
-          <ellipse cx="86" cy="182" rx="10" ry="5" fill="#ffa62b"/>
-          <ellipse cx="114" cy="182" rx="10" ry="5" fill="#ffa62b"/>
-        </svg>
-      </button>
-      <div class="hint-listen" id="listen-hint">tap the parrot to hear it 🔊</div>
-      <div class="audio-row">
-        <button class="toybtn turq small" id="btn-again">🔊 again</button>
-        <button class="toybtn ivory small" id="btn-slow">🐢 slow</button>
-        <button class="toybtn yellow small" id="btn-hint">💡 hint</button>
-      </div>
+<!-- ======================= GUESS ======================= -->
+<section id="s-guess" class="screen">
+  <div class="wrap center">
+    <h2 class="step-title" id="guess-title">What did Anna say? Tap it!</h2>
+    <div class="guess-grid" id="guess-grid"></div>
+  </div>
+</section>
+
+<!-- ======================= RESULT ======================= -->
+<section id="s-result" class="screen">
+  <div class="wrap center">
+    <div class="result-mark" id="result-mark"><svg><use href="#ic-check"/></svg></div>
+    <h2 class="result-title" id="result-title">ಭೇಷ್! Team point!</h2>
+    <div class="secret-card framed small-card">
+      <svg class="secret-art" id="result-art"><use href="#pic-naayi"/></svg>
+      <div class="secret-kn" id="result-kn">ನಾಯಿ</div>
+      <div class="secret-tr" id="result-tr">naayi · dog</div>
     </div>
+    <button class="sketchbtn small" id="btn-result-hear">
+      <svg class="inline-ic"><use href="#ic-sound"/></svg> hear it again
+    </button>
+    <button class="sketchbtn big primary" id="btn-next">next round</button>
+    <div class="score-line" id="result-score"></div>
+  </div>
+</section>
 
-    <div class="answer-area" id="answer-area">
-      <div class="type-row" id="type-row">
-        <input class="answer-input" id="answer-input" type="text"
-               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-               placeholder="type what you hear…" aria-label="Type the Kannada word in English letters">
-        <button class="toybtn green" id="btn-check">Check ✓</button>
-      </div>
-      <div class="choices" id="choices"></div>
-      <div class="feedback" id="feedback" role="status"></div>
-      <div id="reveal-slot"></div>
+<!-- ======================= FINAL ======================= -->
+<section id="s-final" class="screen">
+  <div class="wrap center">
+    <div class="mascot small-mascot"><svg><use href="#art-parrot"/></svg></div>
+    <h2 class="final-title">Team ಅಣ್ಣ-ತಮ್ಮ!</h2>
+    <div class="final-stars" id="final-stars"></div>
+    <p class="final-sub" id="final-sub"></p>
+    <div class="final-row">
+      <button class="sketchbtn big primary" id="btn-again">play again</button>
+      <button class="sketchbtn big" id="btn-home">home</button>
     </div>
   </div>
 </section>
 
-<!-- ======================= COMPLETE ======================= -->
-<section id="screen-complete" class="screen">
-  <div class="wrap complete-stage">
-    <div class="done-burst">🦜🎉</div>
-    <h2 id="done-title">ಭೇಷ್! Bhesh!</h2>
-    <div class="done-sub" id="done-sub"></div>
-    <div class="done-stars" id="done-stars"></div>
-    <div class="complete-actions">
-      <button class="toybtn turq" id="btn-replay">🔁 play again</button>
-      <button class="toybtn yellow" id="btn-home">🏠 toy shelf</button>
-    </div>
-  </div>
-</section>
-
-<div class="confetti" id="confetti"></div>
-
-<script src="js/lessons.js?v=3"></script>
-<script src="js/app.js?v=3"></script>
+<script src="js/barrier.js?v=1"></script>
 </body>
 </html>
