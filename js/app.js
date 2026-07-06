@@ -9,7 +9,7 @@
     complete: $("screen-complete"),
   };
 
-  const RING_COLORS = ["#e8482f", "#ffb627", "#4fb35b", "#33bfb0", "#f0679e"];
+  const RING_COLORS = ["#ff6b6b", "#ffc93c", "#3fc978", "#4cc9f0", "#ff7eb6", "#9b5de5"];
   const store = {
     get player() { return localStorage.getItem("mt.player") || "anna"; },
     set player(v) { localStorage.setItem("mt.player", v); },
@@ -120,25 +120,20 @@
   function renderHome() {
     document.querySelectorAll(".player").forEach((el) =>
       el.classList.toggle("selected", el.dataset.player === store.player));
-    const shelves = $("shelves");
-    shelves.innerHTML = "";
-    for (let r = 0; r < LESSONS.length; r += 2) {
-      const row = document.createElement("div");
-      row.className = "shelf-row";
-      LESSONS.slice(r, r + 2).forEach((lesson) => {
-        const stars = store.stars(lesson.id);
-        const btn = document.createElement("button");
-        btn.className = `lesson-card ${lesson.color}`;
-        btn.innerHTML = `
-          <span class="licon">${lesson.icon}</span>
-          <span class="lkn">${lesson.kn}</span>
-          <span class="len">${lesson.title}</span>
-          <span class="lstars">${stars ? "⭐".repeat(stars) : ""}</span>`;
-        btn.addEventListener("click", () => startLesson(lesson));
-        row.appendChild(btn);
-      });
-      shelves.appendChild(row);
-    }
+    const grid = $("lessons");
+    grid.innerHTML = "";
+    LESSONS.forEach((lesson) => {
+      const stars = store.stars(lesson.id);
+      const btn = document.createElement("button");
+      btn.className = `lesson-card ${lesson.color}`;
+      btn.innerHTML = `
+        <span class="licon">${lesson.icon}</span>
+        <span class="lkn">${lesson.kn}</span>
+        <span class="len">${lesson.title}</span>
+        <span class="lstars">${stars ? "⭐".repeat(stars) : ""}</span>`;
+      btn.addEventListener("click", () => startLesson(lesson));
+      grid.appendChild(btn);
+    });
   }
 
   document.querySelectorAll(".player").forEach((el) =>
@@ -148,33 +143,22 @@
       sndPlok();
     }));
 
-  /* ---------------- peg / ring progress ---------------- */
+  /* ---------------- candy segment progress ---------------- */
 
   function renderPeg(done, total) {
-    const svg = $("peg");
-    const parts = [
-      `<rect x="30" y="106" width="100" height="12" rx="6" fill="#a86a34"/>`,
-      `<rect x="76" y="14" width="8" height="96" rx="4" fill="#d99a5b"/>`,
-    ];
+    const bar = $("progress");
+    bar.innerHTML = "";
     for (let i = 0; i < total; i++) {
-      const y = 100 - i * 10.5;
-      const rx = 42 - i * 2.4;
+      const seg = document.createElement("div");
+      seg.className = "seg";
       if (i < done) {
-        const c = RING_COLORS[i % RING_COLORS.length];
-        const drop = i === done - 1 ? "ring drop" : "ring";
-        parts.push(`<g class="${drop}">
-          <ellipse cx="80" cy="${y}" rx="${rx}" ry="7" fill="${c}"/>
-          <ellipse cx="80" cy="${y - 2}" rx="${rx * 0.8}" ry="3.4" fill="#fff" opacity=".22"/>
-        </g>`);
+        seg.classList.add("fill");
+        seg.style.background = RING_COLORS[i % RING_COLORS.length];
+        if (i < done - 1) seg.style.animation = "none";
       }
+      bar.appendChild(seg);
     }
-    parts.push(`<text x="132" y="102" font-size="13" font-weight="700"
-      fill="rgba(255,243,220,.5)" font-family="Nunito, sans-serif">${done}/${total}</text>`);
-    if (done === total) {
-      parts.push(`<g class="ring drop"><circle cx="80" cy="8" r="9" fill="#fff3dc"/>
-        <circle cx="80" cy="-2" r="3.5" fill="#e8482f"/></g>`);
-    }
-    svg.innerHTML = parts.join("");
+    $("pcount").textContent = `${done}/${total}`;
   }
 
   /* ---------------- lesson flow ---------------- */
