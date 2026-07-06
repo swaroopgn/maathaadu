@@ -141,6 +141,11 @@
       store.player = el.dataset.player;
       renderHome();
       sndPlok();
+      el.animate(
+        [{ transform: "scale(1.15) rotate(-2deg)" }, { transform: "scale(1.05) rotate(-1deg)" }],
+        { duration: 300, easing: "cubic-bezier(.34,1.8,.4,1)" }
+      );
+      $("lessons").scrollIntoView({ behavior: "smooth", block: "nearest" });
     }));
 
   /* ---------------- candy segment progress ---------------- */
